@@ -1,0 +1,30 @@
+# The Ip Address RedstoneByte listens on.
+# Empty means the Default IpAddress.
+IpAddress = ""
+# The Port RedstoneByte listens on.
+Port = 25565
+# The Maximum amount of Players to show in the Server List.
+MaxPlayers = 2017
+# The Maximum amount of Players this Proxy should have.
+# Anything less than zero means unlimited.
+PlayerLimit = -1
+# The Message of the Day of this Proxy.
+Motd = "A RedstoneByte Proxy"
+# If the Proxy should autenticate it's players by Mojang.
+# FYI: Disabling this also disables The Protocol Encryption.
+OnlineMode = false
+# If the Player's Ip and UUID/GUID should be passed to the connecting Server.
+IpForward = false
+
+# This Category contins Sttings Specific to Networking.
+[Networking]
+# After how many milisconds without a response, a client shoud be kicked.
+ReadTimeout = 30
+# The Protocol of the Clients get Patched to this Version.
+ProtocolVersion = 316
+# The minimum size of a Packet to be compressed.
+#   - anything less then zero means disabled.
+#   - 0 means 'Compress Anything' or any packet.
+# Note: Packets less than 64 bytes wiil be extended to 64 bytes.
+# Note: And The Maximum Transmition Unit is 1500 bytes.
+CompressionThreshold = 256

@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>10.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="xunit">
+      <Version>2.3.0-beta1-build3642</Version>
+    </PackageReference>
+    <PackageReference Include="xunit.runner.visualstudio">
+      <Version>2.3.0-beta1-build1309</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RedstoneByte\RedstoneByte.csproj">
+      <Project>{df1841fb-47ee-4c3a-ab34-f408c2ba8925}</Project>
+      <Name>RedstoneByte</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>
