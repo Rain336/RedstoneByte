@@ -20,9 +20,9 @@ namespace RedstoneByte.Networking.Packets
         {
             EntityId = buffer.ReadVarInt();
             PlayerGuid = buffer.ReadGuid();
-            X = version > ProtocolVersion.V19 ? buffer.ReadDouble() : buffer.ReadInt();
-            Y = version > ProtocolVersion.V19 ? buffer.ReadDouble() : buffer.ReadInt();
-            Z = version > ProtocolVersion.V19 ? buffer.ReadDouble() : buffer.ReadInt();
+            X = version >= ProtocolVersion.V19 ? buffer.ReadDouble() : buffer.ReadInt();
+            Y = version >= ProtocolVersion.V19 ? buffer.ReadDouble() : buffer.ReadInt();
+            Z = version >= ProtocolVersion.V19 ? buffer.ReadDouble() : buffer.ReadInt();
             Yaw = buffer.ReadByte();
             Pitch = buffer.ReadByte();
             if (version == ProtocolVersion.V189)
@@ -32,6 +32,19 @@ namespace RedstoneByte.Networking.Packets
 
         public void WriteToBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
+            buffer.WriteVarInt(EntityId);
+            buffer.WriteGuid(PlayerGuid);
+            if (version >= ProtocolVersion.V19) buffer.WriteDouble(X);
+            else buffer.WriteInt((int) Math.Floor(X));
+            if (version >= ProtocolVersion.V19) buffer.WriteDouble(Y);
+            else buffer.WriteInt((int) Math.Floor(Y));
+            if (version >= ProtocolVersion.V19) buffer.WriteDouble(Z);
+            else buffer.WriteInt((int) Math.Floor(Z));
+            buffer.WriteByte(Yaw);
+            buffer.WriteByte(Pitch);
+            if (version == ProtocolVersion.V189)
+                buffer.WriteShort(CurrentItem);
+            Metadata.WriteToBuffer(buffer);
         }
     }
 }

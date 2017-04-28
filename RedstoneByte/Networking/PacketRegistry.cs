@@ -32,12 +32,18 @@ namespace RedstoneByte.Networking
                 play.RegisterPacket(0x01, typeof(PacketJoinGame), ProtocolVersion.V189);
                 play.RegisterPacket(0x02, typeof(PacketChatMessageClient), ProtocolVersion.V189);
                 play.RegisterPacket(0x05, typeof(PacketSpawnPlayer), plus19);
+                play.RegisterPacket(0x06, typeof(PacketAnimationClient), plus19);
+                play.RegisterPacket(0x08, typeof(PacketBlockBreakAnimation), plus19);
+                play.RegisterPacket(0x0B, typeof(PacketAnimationClient), ProtocolVersion.V189);
                 play.RegisterPacket(0x0C, typeof(PacketSpawnPlayer), ProtocolVersion.V189);
                 play.RegisterPacket(0x0F, typeof(PacketChatMessageClient), plus19);
                 play.RegisterPacket(0x18, typeof(PacketPluginMessage), plus19);
                 play.RegisterPacket(0x1A, typeof(PacketDisconnect), plus19);
+                play.RegisterPacket(0x1A, typeof(PacketEntityStatus), ProtocolVersion.V189);
+                play.RegisterPacket(0x1B, typeof(PacketEntityStatus), plus19);
                 play.RegisterPacket(0x1F, typeof(PacketKeepAlive), plus19);
                 play.RegisterPacket(0x23, typeof(PacketJoinGame), plus19);
+                play.RegisterPacket(0x25, typeof(PacketBlockBreakAnimation), ProtocolVersion.V189);
                 play.RegisterPacket(0x2D, typeof(PacketPlayerList), plus19);
                 play.RegisterPacket(0x38, typeof(PacketPlayerList), ProtocolVersion.V189);
                 play.RegisterPacket(0x3F, typeof(PacketPluginMessage), ProtocolVersion.V189);

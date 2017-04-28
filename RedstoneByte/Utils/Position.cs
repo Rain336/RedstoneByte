@@ -24,6 +24,11 @@ namespace RedstoneByte.Utils
             Z = (int) ((value << 38) >> 38);
         }
 
+        public long ToLong()
+        {
+            return ((X & 0x3FFFFFFL) << 38) | ((Y & 0xFFFL) << 26) | (Z & 0x3FFFFFFL);
+        }
+
         public bool Equals(Position other)
         {
             return X == other.X && Y == other.Y && Z == other.Z;

@@ -21,6 +21,11 @@ namespace RedstoneByte.Utils
             Meatdata = (byte) (value & 0xF);
         }
 
+        public int ToInteger()
+        {
+            return (Id << 4) | (Meatdata & 0xF);
+        }
+
         public bool Equals(BlockId other)
         {
             return Id == other.Id && Meatdata == other.Meatdata;

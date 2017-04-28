@@ -39,7 +39,7 @@ namespace RedstoneByte.Utils
                     return new Rotation(buffer.ReadFloat(), buffer.ReadFloat(), buffer.ReadFloat());
 
                 case EntityMetadata.EntryType.Position:
-                    return new Position(buffer.ReadLong());
+                    return buffer.ReadPosition();
 
                 case EntityMetadata.EntryType.OptPosition:
                     return buffer.ReadBoolean() ? new Position(buffer.ReadLong()) : Position.Zero;

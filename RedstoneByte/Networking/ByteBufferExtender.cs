@@ -29,6 +29,11 @@ namespace RedstoneByte.Networking
             return BitConverter.ToSingle(buffer.ReadBytes(4).ToArray(), 0);
         }
 
+        public static Position ReadPosition(this IByteBuffer buffer)
+        {
+            return new Position(buffer.ReadLong());
+        }
+
         public static Slot ReadSlot(this IByteBuffer buffer)
         {
             var result = new Slot(buffer.ReadShort());
@@ -73,6 +78,11 @@ namespace RedstoneByte.Networking
         public static void WriteFloat(this IByteBuffer buffer, float value)
         {
             buffer.WriteBytes(BitConverter.GetBytes(value));
+        }
+
+        public static void WritePosition(this IByteBuffer buffer, Position value)
+        {
+            buffer.WriteLong(value.ToLong());
         }
 
         public static void WriteSlot(this IByteBuffer buffer, Slot value)

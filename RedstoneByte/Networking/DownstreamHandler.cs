@@ -24,6 +24,7 @@ namespace RedstoneByte.Networking
 
         public void OnPacket(IPacket packet)
         {
+            PatchEntityId(packet as IEntityPacket);
             Player.SendPacketAsync(packet);
         }
 
@@ -47,6 +48,12 @@ namespace RedstoneByte.Networking
                 Logger.Warn(exception, "Server '{0}' errored while Connecting!", Server.Info.Name);
             }
             Player.DisconnectAsync(Texts.Of(exception.Message));
+        }
+
+        private void PatchEntityId(IEntityPacket packet)
+        {
+            if (packet != null && packet.EntityId == Player.ServerEntityId)
+                packet.EntityId = Player.ClientEntityId;
         }
     }
 }
