@@ -31,23 +31,66 @@ namespace RedstoneByte.Networking
                 play.RegisterPacket(0x00, typeof(PacketKeepAlive), ProtocolVersion.V189);
                 play.RegisterPacket(0x01, typeof(PacketJoinGame), ProtocolVersion.V189);
                 play.RegisterPacket(0x02, typeof(PacketChatMessageClient), ProtocolVersion.V189);
+                play.RegisterPacket(0x04, typeof(PacketEntityEquipment), ProtocolVersion.V189);
                 play.RegisterPacket(0x05, typeof(PacketSpawnPlayer), plus19);
                 play.RegisterPacket(0x06, typeof(PacketAnimationClient), plus19);
                 play.RegisterPacket(0x08, typeof(PacketBlockBreakAnimation), plus19);
+                play.RegisterPacket(0x0A, typeof(PacketUseBed), ProtocolVersion.V189);
                 play.RegisterPacket(0x0B, typeof(PacketAnimationClient), ProtocolVersion.V189);
                 play.RegisterPacket(0x0C, typeof(PacketSpawnPlayer), ProtocolVersion.V189);
+                play.RegisterPacket(0x0D, typeof(PacketCollectItem), ProtocolVersion.V189);
                 play.RegisterPacket(0x0F, typeof(PacketChatMessageClient), plus19);
+                play.RegisterPacket(0x12, typeof(PacketEntityVelocity), ProtocolVersion.V189);
+                play.RegisterPacket(0x13, typeof(PacketDestroyEntities), ProtocolVersion.V189);
+                play.RegisterPacket(0x15, typeof(PacketEntityRelativeMove), ProtocolVersion.V189);
+                play.RegisterPacket(0x16, typeof(PacketEntityLook), ProtocolVersion.V189);
+                play.RegisterPacket(0x17, typeof(PacketEntityLookAndRelativeMove), ProtocolVersion.V189);
                 play.RegisterPacket(0x18, typeof(PacketPluginMessage), plus19);
+                play.RegisterPacket(0x18, typeof(PacketEntityTeleport), ProtocolVersion.V189);
+                play.RegisterPacket(0x19, typeof(PacketEntityHeadLook), ProtocolVersion.V189);
                 play.RegisterPacket(0x1A, typeof(PacketDisconnect), plus19);
                 play.RegisterPacket(0x1A, typeof(PacketEntityStatus), ProtocolVersion.V189);
                 play.RegisterPacket(0x1B, typeof(PacketEntityStatus), plus19);
+                play.RegisterPacket(0x1B, typeof(PacketAttachEntity), ProtocolVersion.V189);
+                play.RegisterPacket(0x1C, typeof(PacketEntityMetadata), ProtocolVersion.V189);
+                play.RegisterPacket(0x1D, typeof(PacketEntityEffect), ProtocolVersion.V189);
+                play.RegisterPacket(0x1E, typeof(PacketRemoveEntityEffect), ProtocolVersion.V189);
                 play.RegisterPacket(0x1F, typeof(PacketKeepAlive), plus19);
+                play.RegisterPacket(0x20, typeof(PacketEntityProperties), ProtocolVersion.V189);
                 play.RegisterPacket(0x23, typeof(PacketJoinGame), plus19);
                 play.RegisterPacket(0x25, typeof(PacketBlockBreakAnimation), ProtocolVersion.V189);
+                play.RegisterPacket(0x25, typeof(PacketEntityRelativeMove), plus19);
+                play.RegisterPacket(0x26, typeof(PacketEntityLookAndRelativeMove), plus19);
+                play.RegisterPacket(0x27, typeof(PacketEntityLook), plus19);
+                play.RegisterPacket(0x28, typeof(PacketEntity), ProtocolVersion.Range());
                 play.RegisterPacket(0x2D, typeof(PacketPlayerList), plus19);
+                play.RegisterPacket(0x2F, typeof(PacketUseBed), plus19);
+                play.RegisterPacket(0x30, typeof(PacketDestroyEntities), plus19);
+                play.RegisterPacket(0x31, typeof(PacketRemoveEntityEffect), plus19);
+                play.RegisterPacket(0x34, typeof(PacketEntityHeadLook), plus19);
+                play.RegisterPacket(0x36, typeof(PacketCamera), plus19);
                 play.RegisterPacket(0x38, typeof(PacketPlayerList), ProtocolVersion.V189);
+                play.RegisterPacket(0x39, typeof(PacketEntityMetadata), plus19);
+                play.RegisterPacket(0x3A, typeof(PacketAttachEntity), plus19);
+                play.RegisterPacket(0x3B, typeof(PacketEntityVelocity), plus19);
+                play.RegisterPacket(0x3C, typeof(PacketEntityEquipment), plus19);
                 play.RegisterPacket(0x3F, typeof(PacketPluginMessage), ProtocolVersion.V189);
                 play.RegisterPacket(0x40, typeof(PacketDisconnect), ProtocolVersion.V189);
+                play.RegisterPacket(0x40, typeof(PacketSetPassengers), plus19);
+                play.RegisterPacket(0x42, typeof(PacketCombatEvent), ProtocolVersion.V189);
+                play.RegisterPacket(0x43, typeof(PacketCamera), ProtocolVersion.V189);
+                play.RegisterPacket(0x48, typeof(PacketCollectItem), ProtocolVersion.Range(ProtocolVersion.V194));
+                play.RegisterPacket(0x49, typeof(PacketEntityTeleport), ProtocolVersion.Range(ProtocolVersion.V194));
+                play.RegisterPacket(0x49, typeof(PacketCollectItem),
+                    ProtocolVersion.V19, ProtocolVersion.V191, ProtocolVersion.V192);
+                play.RegisterPacket(0x4A, typeof(PacketEntityProperties), ProtocolVersion.Range(ProtocolVersion.V194));
+                play.RegisterPacket(0x4A, typeof(PacketEntityTeleport),
+                    ProtocolVersion.V19, ProtocolVersion.V191, ProtocolVersion.V192);
+                play.RegisterPacket(0x4A, typeof(PacketEntityProperties),
+                    ProtocolVersion.V19, ProtocolVersion.V191, ProtocolVersion.V192);
+                play.RegisterPacket(0x4B, typeof(PacketEntityEffect), ProtocolVersion.Range(ProtocolVersion.V194));
+                play.RegisterPacket(0x4C, typeof(PacketEntityEffect),
+                    ProtocolVersion.V19, ProtocolVersion.V191, ProtocolVersion.V192);
             });
         });
 
@@ -74,8 +117,10 @@ namespace RedstoneByte.Networking
                 play.RegisterPacket(0x04, typeof(PacketClientSettings), plus19);
                 play.RegisterPacket(0x09, typeof(PacketPluginMessage), plus19);
                 play.RegisterPacket(0x0B, typeof(PacketKeepAlive), plus19);
-                play.RegisterPacket(0x17, typeof(PacketPluginMessage), ProtocolVersion.V189);
+                play.RegisterPacket(0x0B, typeof(PacketEntityAction), ProtocolVersion.V189);
+                play.RegisterPacket(0x14, typeof(PacketEntityAction), plus19);
                 play.RegisterPacket(0x15, typeof(PacketClientSettings), ProtocolVersion.V189);
+                play.RegisterPacket(0x17, typeof(PacketPluginMessage), ProtocolVersion.V189);
             });
         });
 

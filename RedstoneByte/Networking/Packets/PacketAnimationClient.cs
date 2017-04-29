@@ -3,18 +3,18 @@ using RedstoneByte.Utils;
 
 namespace RedstoneByte.Networking.Packets
 {
-    public sealed class PacketAnimationClient : IEntityPacket
+    public sealed class PacketAnimationClient : EntityPacket
     {
-        public int EntityId { get; set; }
+        public override int EntityId { get; set; }
         public Animation Animation { get; set; }
 
-        public void ReadFromBuffer(IByteBuffer buffer, ProtocolVersion version)
+        public override void ReadFromBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
             EntityId = buffer.ReadVarInt();
             Animation = (Animation) buffer.ReadByte();
         }
 
-        public void WriteToBuffer(IByteBuffer buffer, ProtocolVersion version)
+        public override void WriteToBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
             buffer.WriteVarInt(EntityId);
             buffer.WriteByte((byte) Animation);

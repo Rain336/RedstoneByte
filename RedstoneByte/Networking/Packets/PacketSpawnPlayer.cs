@@ -4,9 +4,9 @@ using RedstoneByte.Utils;
 
 namespace RedstoneByte.Networking.Packets
 {
-    public sealed class PacketSpawnPlayer : IEntityPacket
+    public sealed class PacketSpawnPlayer : EntityPacket
     {
-        public int EntityId { get; set; }
+        public override int EntityId { get; set; }
         public Guid PlayerGuid { get; set; }
         public double X { get; set; }
         public double Y { get; set; }
@@ -16,7 +16,7 @@ namespace RedstoneByte.Networking.Packets
         public short CurrentItem { get; set; }
         public readonly EntityMetadata Metadata = new EntityMetadata();
 
-        public void ReadFromBuffer(IByteBuffer buffer, ProtocolVersion version)
+        public override void ReadFromBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
             EntityId = buffer.ReadVarInt();
             PlayerGuid = buffer.ReadGuid();
@@ -30,7 +30,7 @@ namespace RedstoneByte.Networking.Packets
             Metadata.ReadFromBuffer(buffer);
         }
 
-        public void WriteToBuffer(IByteBuffer buffer, ProtocolVersion version)
+        public override void WriteToBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
             buffer.WriteVarInt(EntityId);
             buffer.WriteGuid(PlayerGuid);

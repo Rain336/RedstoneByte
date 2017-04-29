@@ -37,7 +37,7 @@ namespace RedstoneByte.Networking
                 _buffer.Add(packet);
                 return;
             }
-            PatchEntityId(packet as IEntityPacket);
+            PatchEntityId(packet as EntityPacket);
             Player.Server.SendPacketAsync(packet);
         }
 
@@ -59,10 +59,9 @@ namespace RedstoneByte.Networking
             }
         }
 
-        private void PatchEntityId(IEntityPacket packet)
+        private void PatchEntityId(EntityPacket packet)
         {
-            if (packet != null && packet.EntityId == Player.ClientEntityId)
-                packet.EntityId = Player.ServerEntityId;
+            packet?.CompareExchange(Player.ClientEntityId, Player.ServerEntityId);
         }
     }
 }

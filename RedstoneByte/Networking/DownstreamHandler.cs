@@ -24,7 +24,7 @@ namespace RedstoneByte.Networking
 
         public void OnPacket(IPacket packet)
         {
-            PatchEntityId(packet as IEntityPacket);
+            PatchEntityId(packet as EntityPacket);
             Player.SendPacketAsync(packet);
         }
 
@@ -50,10 +50,9 @@ namespace RedstoneByte.Networking
             Player.DisconnectAsync(Texts.Of(exception.Message));
         }
 
-        private void PatchEntityId(IEntityPacket packet)
+        private void PatchEntityId(EntityPacket packet)
         {
-            if (packet != null && packet.EntityId == Player.ServerEntityId)
-                packet.EntityId = Player.ClientEntityId;
+            packet?.CompareExchange(Player.ServerEntityId, Player.ClientEntityId);
         }
     }
 }

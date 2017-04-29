@@ -3,9 +3,9 @@ using RedstoneByte.Utils;
 
 namespace RedstoneByte.Networking.Packets
 {
-    public class PacketJoinGame : IPacket
+    public class PacketJoinGame : EntityPacket
     {
-        public int EntityId { get; set; }
+        public override int EntityId { get; set; }
         public byte GameMode { get; set; }
         public int Dimension { get; set; }
         public byte Difficulty { get; set; }
@@ -13,7 +13,7 @@ namespace RedstoneByte.Networking.Packets
         public string LevelType { get; set; }
         public bool DebugInfo { get; set; }
 
-        public void ReadFromBuffer(IByteBuffer buffer, ProtocolVersion version)
+        public override void ReadFromBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
             EntityId = buffer.ReadInt();
             GameMode = buffer.ReadByte();
@@ -24,7 +24,7 @@ namespace RedstoneByte.Networking.Packets
             DebugInfo = buffer.ReadBoolean();
         }
 
-        public void WriteToBuffer(IByteBuffer buffer, ProtocolVersion version)
+        public override void WriteToBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
             buffer.WriteInt(EntityId);
             buffer.WriteByte(GameMode);
