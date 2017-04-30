@@ -67,7 +67,27 @@ namespace RedstoneByte.Networking
                 case PacketDisconnect disconnect:
                     OnDisconnect(disconnect);
                     return;
+
+                case PacketJoinGame join:
+                    OnJoinGame(join);
+                    return;
             }
+        }
+
+        private void OnJoinGame(PacketJoinGame join)
+        {
+            if (Player.Server == null)
+            {
+                Player.ClientEntityId = Player.ServerEntityId = join.EntityId;
+            }
+            else
+            {
+                Player.ServerEntityId = join.EntityId;
+            }
+            var server = new Server(Info, Player, Handler);
+            Handler.Handler = new DownstreamHandler(server, Player);
+            Player.SwitchServer(server);
+            Player.SendPacketAsync(join);
         }
 
         private void OnDisconnect(PacketDisconnect disconnect)
@@ -80,9 +100,6 @@ namespace RedstoneByte.Networking
         private void OnLoginSuccess(PacketLoginSuccess success)
         {
             Handler.State = ConnectionState.Play;
-            var server = new Server(Info, Player, Handler);
-            Handler.Handler = new DownstreamHandler(server, Player);
-            Player.SwitchServer(server);
         }
 
         private void OnSetCompression(PacketSetCompression compression)

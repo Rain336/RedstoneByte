@@ -44,10 +44,7 @@ namespace RedstoneByte.Networking
         }
 
         public Task SendPacketAsync(IPacket packet)
-        {
-            RedstoneByte.Logger.Debug(Handler.GetType() + " => " + packet.GetType());
-            return _channel.WriteAndFlushAsync(packet);
-        }
+            => _channel.WriteAndFlushAsync(packet);
 
         public Task CloseConnectionAsync()
         {

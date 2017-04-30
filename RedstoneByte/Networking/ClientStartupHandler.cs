@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DotNetty.Handlers.Timeout;
+using DotNetty.Transport.Channels;
 using NLog;
 using RedstoneByte.Networking.Packets;
 using RedstoneByte.Text;
@@ -219,7 +220,8 @@ namespace RedstoneByte.Networking
                                 {
                                     player.DisconnectAsync(Texts.Of("Error connecting to Server"));
                                     //TODO: Translation
-                                    Logger.Warn(e.Exception.InnerException, "'{0}' couldn't connect to Server '{1}'",
+                                    Logger.Warn(e.Exception.InnerException.InnerException,
+                                        "'{0}' couldn't connect to Server '{1}'",
                                         _name, info.Name);
                                 },
                                 TaskContinuationOptions.OnlyOnFaulted);
@@ -251,13 +253,15 @@ namespace RedstoneByte.Networking
         public void OnException(Exception exception)
         {
             _disconnected = true;
-            if (exception is ReadTimeoutException)
+            switch (exception)
             {
-                Logger.Info(exception, "'{0}' timed out!", _name);
-            }
-            else
-            {
-                Logger.Warn(exception, "'{0}' errored while Connecting!", _name);
+                case ReadTimeoutException timeout:
+                    Logger.Info(exception, "'{0}' timed out!", _name);
+                    break;
+
+                default:
+                    Logger.Warn(exception, "'{0}' errored while Connecting!", _name);
+                    break;
             }
         }
 

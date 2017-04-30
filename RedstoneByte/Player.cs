@@ -58,7 +58,7 @@ namespace RedstoneByte
             {
                 var channel = await info.CreateConnectionAsync(this);
             }
-            catch (Exception e)
+            catch (AggregateException e)
             {
                 ClosePendingConnection(info);
                 throw;

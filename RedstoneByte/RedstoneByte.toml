@@ -27,4 +27,4 @@ ProtocolVersion = 316
 #   - 0 means 'Compress Anything' or any packet.
 # Note: Packets less than 64 bytes wiil be extended to 64 bytes.
 # Note: And The Maximum Transmition Unit is 1500 bytes.
-CompressionThreshold = 256
+CompressionThreshold = -1

@@ -13,6 +13,7 @@ namespace RedstoneByte.Networking.Packets
             Tag = buffer.ReadString();
             Buffer = buffer.Slice();
             Buffer.Retain();
+            buffer.SkipBytes(buffer.ReadableBytes);
         }
 
         public void WriteToBuffer(IByteBuffer buffer, ProtocolVersion version)
