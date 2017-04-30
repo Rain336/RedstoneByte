@@ -22,5 +22,5 @@ PerfTestResults
 data
 
 #Config Files
-RedstoneByte/RedstoneByte.toml
-RedstoneByte/ServerQueue.json
+RedstoneByte.toml
+ServerQueue.json

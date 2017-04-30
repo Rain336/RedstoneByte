@@ -84,9 +84,9 @@ namespace RedstoneByte.Networking
                 play.RegisterPacket(0x49, typeof(PacketCollectItem),
                     ProtocolVersion.V19, ProtocolVersion.V191, ProtocolVersion.V192);
                 play.RegisterPacket(0x4A, typeof(PacketEntityProperties), ProtocolVersion.Range(ProtocolVersion.V194));
-                play.RegisterPacket(0x4A, typeof(PacketEntityTeleport),
-                    ProtocolVersion.V19, ProtocolVersion.V191, ProtocolVersion.V192);
                 play.RegisterPacket(0x4A, typeof(PacketEntityProperties),
+                    ProtocolVersion.V19, ProtocolVersion.V191, ProtocolVersion.V192);
+                play.RegisterPacket(0x4B, typeof(PacketEntityTeleport),
                     ProtocolVersion.V19, ProtocolVersion.V191, ProtocolVersion.V192);
                 play.RegisterPacket(0x4B, typeof(PacketEntityEffect), ProtocolVersion.Range(ProtocolVersion.V194));
                 play.RegisterPacket(0x4C, typeof(PacketEntityEffect),

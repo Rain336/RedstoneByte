@@ -15,6 +15,7 @@ The code style is the default ReSharpener code style.
 - [X] Entity Id Patching
 
 ### Planed
+- [ ] Replace BouncyCastle AES with .NET Core 2.0 AES
 - [ ] Plugin Api
 
 ### Bugs
