@@ -9,9 +9,9 @@ namespace RedstoneByte.Networking.Packets
         public int HoldingEntityId { get; set; }
         public bool Leash { get; set; }
 
-        public override void CompareExchange(int test, int value)
+        public override void CompareSet(int test, int value)
         {
-            base.CompareExchange(test, value);
+            base.CompareSet(test, value);
             if (HoldingEntityId == test)
                 HoldingEntityId = value;
         }

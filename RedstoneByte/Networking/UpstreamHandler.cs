@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using DotNetty.Handlers.Timeout;
 using NLog;
 using RedstoneByte.Utils;
@@ -10,20 +9,10 @@ namespace RedstoneByte.Networking
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public readonly Player Player;
-        private readonly List<IPacket> _buffer = new List<IPacket>();
 
         public UpstreamHandler(Player player)
         {
             Player = player;
-        }
-
-        public void ApplyBuffer()
-        {
-            if (Player.Server == null) return;
-            foreach (var packet in _buffer)
-            {
-                OnPacket(packet);
-            }
         }
 
         public void OnConnect()
@@ -32,11 +21,7 @@ namespace RedstoneByte.Networking
 
         public void OnPacket(IPacket packet)
         {
-            if (Player.Server == null)
-            {
-                _buffer.Add(packet);
-                return;
-            }
+            if (Player.Server == null) return;
             PatchEntityId(packet as EntityPacket);
             Player.Server.SendPacketAsync(packet);
         }
@@ -61,7 +46,7 @@ namespace RedstoneByte.Networking
 
         private void PatchEntityId(EntityPacket packet)
         {
-            packet?.CompareExchange(Player.ClientEntityId, Player.ServerEntityId);
+            packet?.CompareSet(Player.ClientEntityId, Player.ServerEntityId);
         }
     }
 }

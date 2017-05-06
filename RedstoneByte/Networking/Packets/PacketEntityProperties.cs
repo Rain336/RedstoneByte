@@ -13,7 +13,7 @@ namespace RedstoneByte.Networking.Packets
         public override void ReadFromBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
             EntityId = buffer.ReadVarInt();
-            var length = buffer.ReadVarInt();
+            var length = buffer.ReadInt();
             for (var i = 0; i < length; i++)
             {
                 Properties.Add(Property.ReadFromBuffer(buffer));
@@ -23,6 +23,11 @@ namespace RedstoneByte.Networking.Packets
         public override void WriteToBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
             buffer.WriteVarInt(EntityId);
+            buffer.WriteInt(Properties.Count);
+            foreach (var prop in Properties)
+            {
+                prop.WriteToBuffer(buffer);
+            }
         }
 
         public sealed class Property
@@ -35,6 +40,17 @@ namespace RedstoneByte.Networking.Packets
             {
                 Key = key;
                 Value = value;
+            }
+
+            public void WriteToBuffer(IByteBuffer buffer)
+            {
+                buffer.WriteString(Key);
+                buffer.WriteDouble(Value);
+                buffer.WriteVarInt(Actions.Count);
+                foreach (var action in Actions)
+                {
+                    action.WriteToBuffer(buffer);
+                }
             }
 
             public static Property ReadFromBuffer(IByteBuffer buffer)
@@ -156,6 +172,13 @@ namespace RedstoneByte.Networking.Packets
                 Guid = guid;
                 Amount = amount;
                 Operation = operation;
+            }
+
+            public void WriteToBuffer(IByteBuffer buffer)
+            {
+                buffer.WriteGuid(Guid);
+                buffer.WriteDouble(Amount);
+                buffer.WriteByte((byte) Operation);
             }
 
             public static PropertyAction ReadFromBuffer(IByteBuffer buffer)

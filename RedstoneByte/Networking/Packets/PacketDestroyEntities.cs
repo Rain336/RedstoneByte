@@ -14,7 +14,7 @@ namespace RedstoneByte.Networking.Packets
 
         public int[] EntityIds { get; set; }
 
-        public override void CompareExchange(int test, int value)
+        public override void CompareSet(int test, int value)
         {
             for (var i = 0; i < EntityIds.Length; i++)
             {

@@ -10,13 +10,13 @@ namespace RedstoneByte.Networking.Packets
 
         public override void ReadFromBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
-            EntityId = buffer.ReadVarInt();
+            EntityId = buffer.ReadInt();
             Status = (EntityStatus) buffer.ReadByte();
         }
 
         public override void WriteToBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
-            buffer.WriteVarInt(EntityId);
+            buffer.WriteInt(EntityId);
             buffer.WriteByte((byte) Status);
         }
     }

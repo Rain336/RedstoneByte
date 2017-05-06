@@ -20,9 +20,10 @@ namespace RedstoneByte.Networking
                              PacketId = id
                          };
 #if DEBUG
-            RedstoneByte.Logger.Debug(Handler.Handler.GetType().Name + " <=IN= " + packet.GetType().Name);
-            RedstoneByte.Logger.Debug(
-                System.BitConverter.ToString(input.Array, input.ReaderIndex, input.ReadableBytes));
+            RedstoneByte.Logger.Debug(Handler.Handler.GetType().Name + " <=IN= " +
+                                      packet.GetType().Name + '(' + id +')');
+            //RedstoneByte.Logger.Debug(
+            //    System.BitConverter.ToString(input.Array, input.ReaderIndex, input.ReadableBytes));
 #endif
             packet.ReadFromBuffer(input, Handler.Version);
             output.Add(packet);

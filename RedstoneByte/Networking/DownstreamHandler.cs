@@ -52,7 +52,7 @@ namespace RedstoneByte.Networking
 
         private void PatchEntityId(EntityPacket packet)
         {
-            packet?.CompareExchange(Player.ServerEntityId, Player.ClientEntityId);
+            packet?.CompareSet(Player.ServerEntityId, Player.ClientEntityId);
         }
     }
 }

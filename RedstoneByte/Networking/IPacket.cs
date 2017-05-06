@@ -15,7 +15,7 @@ namespace RedstoneByte.Networking
         public abstract void ReadFromBuffer(IByteBuffer buffer, ProtocolVersion version);
         public abstract void WriteToBuffer(IByteBuffer buffer, ProtocolVersion version);
 
-        public virtual void CompareExchange(int test, int value)
+        public virtual void CompareSet(int test, int value)
         {
             if (EntityId == test)
                 EntityId = value;

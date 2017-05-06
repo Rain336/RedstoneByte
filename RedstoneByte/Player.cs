@@ -71,12 +71,10 @@ namespace RedstoneByte
                 _pending.Remove(info);
         }
 
-        public async Task SwitchServer(Server server)
+        public void SwitchServer(Server server)
         {
-            if (Server != null)
-                await Server.DisconnectAsync();
+            Server?.DisconnectAsync();
             Server = server;
-            ((UpstreamHandler) Handler.Handler).ApplyBuffer();
         }
     }
 }

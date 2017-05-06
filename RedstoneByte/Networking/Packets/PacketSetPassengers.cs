@@ -8,9 +8,9 @@ namespace RedstoneByte.Networking.Packets
         public override int EntityId { get; set; }
         public int[] Passengers { get; set; }
 
-        public override void CompareExchange(int test, int value)
+        public override void CompareSet(int test, int value)
         {
-            base.CompareExchange(test, value);
+            base.CompareSet(test, value);
             for (var i = 0; i < Passengers.Length; i++)
             {
                 if (Passengers[i] == test)

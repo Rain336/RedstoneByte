@@ -7,9 +7,9 @@ using RedstoneByte.Networking;
 
 namespace RedstoneByte.Utils
 {
-    public sealed class EntityMetadata : IList<EntityMetadata.Entry>
+    public sealed class EntityMetadata
     {
-        public readonly List<Entry> Entries = new List<Entry>();
+        public readonly Dictionary<byte, Entry> Entries = new Dictionary<byte, Entry>();
 
         public void ReadFromBuffer(IByteBuffer buffer)
         {
@@ -17,14 +17,14 @@ namespace RedstoneByte.Utils
             while (index != 0xFF)
             {
                 var type = (EntryType) buffer.ReadByte();
-                Entries.Insert(index, new Entry(type, type.ReadFromBuffer(buffer)));
+                Entries.Add(index, new Entry(type, type.ReadFromBuffer(buffer)));
                 index = buffer.ReadByte();
             }
         }
 
         public void WriteToBuffer(IByteBuffer buffer)
         {
-            for (var i = 0; i < Entries.Count; i++)
+            for (byte i = 0; i < Entries.Count; i++)
             {
                 if (Entries[i] == null) continue;
                 buffer.WriteByte(i);
@@ -34,7 +34,13 @@ namespace RedstoneByte.Utils
             buffer.WriteByte(0xFF);
         }
 
-        public sealed class Entry
+        public Entry this[byte key]
+        {
+            get => Entries[key];
+            set => Entries[key] = value;
+        }
+
+        public sealed class Entry : IEquatable<Entry>
         {
             public readonly EntryType Type;
             public readonly object Value;
@@ -42,7 +48,7 @@ namespace RedstoneByte.Utils
             public Entry(EntryType type, object value)
             {
                 Type = type;
-                Value = value;
+                Value = value ?? throw new ArgumentNullException(nameof(value));
             }
 
             public T GetValue<T>()
@@ -131,6 +137,35 @@ namespace RedstoneByte.Utils
                         throw new ArgumentOutOfRangeException();
                 }
             }
+
+            public bool Equals(Entry other)
+            {
+                if (ReferenceEquals(other, null)) return false;
+                return Type == other.Type && Value == other.Value;
+            }
+
+            public override bool Equals(object obj)
+            {
+                return Equals(obj as Entry);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return ((int) Type * 397) ^ Value.GetHashCode();
+                }
+            }
+
+            public static bool operator ==(Entry l, Entry r)
+            {
+                return ReferenceEquals(l, null) ? ReferenceEquals(r, null) : l.Equals(r);
+            }
+
+            public static bool operator !=(Entry l, Entry r)
+            {
+                return ReferenceEquals(l, null) ? !ReferenceEquals(r, null) : !l.Equals(r);
+            }
         }
 
         public enum EntryType
@@ -148,65 +183,6 @@ namespace RedstoneByte.Utils
             Direction,
             OptGuid,
             OptBlockId
-        }
-
-        public IEnumerator<Entry> GetEnumerator()
-        {
-            return Entries.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public void Add(Entry item)
-        {
-            Entries.Add(item);
-        }
-
-        public void Clear()
-        {
-            Entries.Clear();
-        }
-
-        public bool Contains(Entry item)
-        {
-            return Entries.Contains(item);
-        }
-
-        public void CopyTo(Entry[] array, int arrayIndex)
-        {
-            Entries.CopyTo(array, arrayIndex);
-        }
-
-        public bool Remove(Entry item)
-        {
-            return Entries.Remove(item);
-        }
-
-        public int Count => Entries.Count;
-        public bool IsReadOnly => false;
-
-        public int IndexOf(Entry item)
-        {
-            return Entries.IndexOf(item);
-        }
-
-        public void Insert(int index, Entry item)
-        {
-            Entries.Insert(index, item);
-        }
-
-        public void RemoveAt(int index)
-        {
-            Entries.RemoveAt(index);
-        }
-
-        public Entry this[int index]
-        {
-            get => Entries[index];
-            set => Entries[index] = value;
         }
     }
 }
