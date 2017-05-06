@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
@@ -9,13 +8,8 @@ namespace RedstoneByte.Networking
 {
     public static class NetworkManager
     {
-        private static int _workerId = 0;
-
-        public static readonly MultithreadEventLoopGroup BossGroup =
-            new MultithreadEventLoopGroup(group => new SingleThreadEventLoop(group, "DotNetty Acceptor"), 1);
-
-        public static readonly MultithreadEventLoopGroup WorkerGroup = new MultithreadEventLoopGroup(
-            group => new SingleThreadEventLoop(group, "DotNetty Worker #" + Interlocked.Increment(ref _workerId)));
+        public static readonly MultithreadEventLoopGroup BossGroup = new MultithreadEventLoopGroup();
+        public static readonly MultithreadEventLoopGroup WorkerGroup = new MultithreadEventLoopGroup();
 
         public static IChannel Channel { get; private set; }
 
@@ -24,6 +18,8 @@ namespace RedstoneByte.Networking
             var bootstrap = new ServerBootstrap()
                 .Group(BossGroup, WorkerGroup)
                 .Option(ChannelOption.SoReuseaddr, true)
+                .ChildOption(ChannelOption.WriteBufferHighWaterMark, 10485760)
+                .ChildOption(ChannelOption.WriteBufferLowWaterMark, 1048576)
                 .Channel<TcpServerSocketChannel>()
                 .ChildHandler(PipelineUtils.ClientInitializer);
 

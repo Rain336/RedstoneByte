@@ -29,9 +29,10 @@ namespace RedstoneByte.Networking
         {
             var result = context.Allocator.Buffer(message.ReadableBytes);
             //Decryptor.TransformBlock(message.Array, 0, message.ReadableBytes, result.Array, 0);
-            Cipher.ProcessBytes(message.Array, 0, message.ReadableBytes, result.Array, 0);
-            result.SetWriterIndex(message.ReadableBytes);
-            message.SetReaderIndex(message.WriterIndex);
+            Cipher.ProcessBytes(message.Array, message.ArrayOffset + message.ReaderIndex, message.ReadableBytes,
+                result.Array, result.ArrayOffset + result.WriterIndex);
+            result.SetWriterIndex(result.WriterIndex + message.ReadableBytes);
+            message.SkipBytes(message.ReadableBytes);
             output.Add(result);
         }
 

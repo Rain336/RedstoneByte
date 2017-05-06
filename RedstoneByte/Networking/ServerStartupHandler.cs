@@ -25,7 +25,7 @@ namespace RedstoneByte.Networking
         public void OnConnect()
         {
             var builder = new StringBuilder(Info.EndPoint.Address.ToString());
-            if (ProxyConfig.Instance.IpForward)
+            if (ProxyConfig.Instance.IpForward && ProxyConfig.Instance.OnlineMode)
             {
                 builder.Append('\0')
                     .Append(Player.Handler.Address.Address)
@@ -35,17 +35,20 @@ namespace RedstoneByte.Networking
             if (Player.Forge)
                 builder.Append("\0FML\0");
             Handler.SendPacketAsync(new PacketHandshake
-                {
-                    Version = RedstoneByte.ProtocolVersion.Id,
-                    Address = builder.ToString(),
-                    Port = (ushort) Info.EndPoint.Port,
-                    Next = 2
-                })
-                .ContinueWith(t => Handler.State = ConnectionState.Login)
-                .ContinueWith(t => Handler.SendPacketAsync(new PacketLoginStart
-                {
-                    Name = Player.Name
-                }));
+            {
+                Version = RedstoneByte.ProtocolVersion.Id,
+                Address = builder.ToString(),
+                Port = (ushort) Info.EndPoint.Port,
+                Next = 2
+            });
+
+            Handler.State = ConnectionState.Login;
+            Handler.SendPacketAsync(new PacketLoginStart
+            {
+                Name = Player.Name
+            });
+
+            Handler.Flush();
         }
 
         public void OnPacket(IPacket packet)

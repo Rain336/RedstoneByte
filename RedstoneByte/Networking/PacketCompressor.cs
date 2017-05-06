@@ -26,12 +26,13 @@ namespace RedstoneByte.Networking
             {
                 output.WriteVarInt(message.ReadableBytes);
                 using (var stream = new DeflateStream(
-                    new MemoryStream(output.Array, output.ReaderIndex, output.ReadableBytes, true),
-                    CompressionMode.Compress))
+                    new MemoryStream(output.Array, output.ArrayOffset + output.WriterIndex,
+                        message.ReadableBytes, true), CompressionMode.Compress))
                 {
-                    stream.Write(message.Array, message.ReaderIndex, message.ReadableBytes);
+                    stream.Write(message.Array, message.ArrayOffset + message.ReaderIndex, message.ReadableBytes);
                 }
-                message.SetReaderIndex(message.ReadableBytes);
+                output.SetWriterIndex(output.WriterIndex + message.ReadableBytes);
+                message.SkipBytes(message.ReadableBytes);
             }
         }
     }

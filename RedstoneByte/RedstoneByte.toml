@@ -12,7 +12,7 @@ PlayerLimit = -1
 Motd = "A RedstoneByte Proxy"
 # If the Proxy should autenticate it's players by Mojang.
 # FYI: Disabling this also disables The Protocol Encryption.
-OnlineMode = false
+OnlineMode = true
 # If the Player's Ip and UUID/GUID should be passed to the connecting Server.
 IpForward = false
 
@@ -27,4 +27,4 @@ ProtocolVersion = 316
 #   - 0 means 'Compress Anything' or any packet.
 # Note: Packets less than 64 bytes wiil be extended to 64 bytes.
 # Note: And The Maximum Transmition Unit is 1500 bytes.
-CompressionThreshold = -1
+CompressionThreshold = 256

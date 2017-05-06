@@ -3,7 +3,7 @@ using DotNetty.Transport.Channels;
 
 namespace RedstoneByte.Networking
 {
-    public sealed class LagacyDecoder : SimpleChannelInboundHandler<IByteBuffer>
+    public sealed class LagacyPingHandler : SimpleChannelInboundHandler<IByteBuffer>
     {
         public override bool IsSharable => true;
 

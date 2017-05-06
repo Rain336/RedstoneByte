@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Net;
 using System.Threading.Tasks;
+using DotNetty.Common.Concurrency;
 using DotNetty.Transport.Channels;
 using RedstoneByte.Utils;
 
@@ -13,6 +15,7 @@ namespace RedstoneByte.Networking
         public IPEndPoint Address => (IPEndPoint) _channel.RemoteAddress;
         public IHandler Handler { get; set; }
         public readonly bool Client;
+        private readonly ConcurrentQueue<BufferedPacket> _buffer = new ConcurrentQueue<BufferedPacket>();
         private IChannel _channel;
 
         public PacketHandler(bool client)
@@ -33,9 +36,25 @@ namespace RedstoneByte.Networking
             Handler.OnPacket(msg);
         }
 
+        public override void ChannelReadComplete(IChannelHandlerContext context)
+        {
+            context.Flush();
+        }
+
         public override void ChannelInactive(IChannelHandlerContext context)
         {
             Handler.OnDisconnect();
+        }
+
+        public override void ChannelWritabilityChanged(IChannelHandlerContext context)
+        {
+            while (_channel.IsWritable)
+            {
+                BufferedPacket packet;
+                if (!_buffer.TryDequeue(out packet)) return;
+                context.WriteAsync(packet.Packet)
+                    .ContinueWith(t => packet.Promise.Complete());
+            }
         }
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
@@ -43,8 +62,30 @@ namespace RedstoneByte.Networking
             Handler.OnException(exception);
         }
 
+        public void Flush()
+            => _channel.Flush();
+
         public Task SendPacketAsync(IPacket packet)
-            => _channel.WriteAndFlushAsync(packet);
+        {
+            if (_channel.IsWritable)
+            {
+#if DEBUG
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+#endif
+                return _channel.WriteAsync(packet)
+#if DEBUG
+                    .ContinueWith(t =>
+                    {
+                        watch.Stop();
+                        RedstoneByte.Logger.Debug(Handler.GetType().Name + " =OUT=> " +
+                                                  packet.GetType().Name + '(' + watch.ElapsedMilliseconds + "ms)");
+                    });
+#endif
+            }
+            var buffer = new BufferedPacket(packet);
+            _buffer.Enqueue(buffer);
+            return buffer.Promise.Task;
+        }
 
         public Task CloseConnectionAsync()
         {
@@ -97,6 +138,17 @@ namespace RedstoneByte.Networking
             else
             {
                 _channel.Pipeline.Remove<PacketDecompressor>();
+            }
+        }
+
+        private sealed class BufferedPacket
+        {
+            public readonly TaskCompletionSource Promise = new TaskCompletionSource();
+            public readonly IPacket Packet;
+
+            public BufferedPacket(IPacket packet)
+            {
+                Packet = packet;
             }
         }
     }

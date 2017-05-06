@@ -199,32 +199,40 @@ namespace RedstoneByte.Networking
                 }
             }
 
-            Handler.SendPacketAsync(new PacketLoginSuccess
+            var threshold = ProxyConfig.Instance.Networking.CompressionThreshold;
+            if (threshold >= 0)
+            {
+                Handler.SendPacketAsync(new PacketSetCompression
                 {
-                    Guid = profile.Guid,
-                    Username = profile.Name
-                })
+                    Threshold = threshold
+                });
+                Handler.UpdateCompressionThreshold(threshold);
+            }
+
+            Handler.SendPacketAsync(new PacketLoginSuccess
+            {
+                Guid = profile.Guid,
+                Username = profile.Name
+            });
+            var player = new Player(Handler, profile, _forge);
+
+            Handler.State = ConnectionState.Play;
+            Handler.Handler = new UpstreamHandler(player);
+            PlayerList.AddPlayer(player);
+            var info = ServerQueue.First;
+
+            if (info == null)
+            {
+                DisconnectAsync(Texts.Of("No Backend Server Found!")); //TODO: Translation
+                return;
+            }
+
+            player.ConnectAsync(info)
                 .ContinueWith(t =>
                 {
-                    var player = new Player(Handler, profile, _forge);
-
-                    Handler.State = ConnectionState.Play;
-                    Handler.Handler = new UpstreamHandler(player);
-                    PlayerList.AddPlayer(player);
-                    var info = ServerQueue.First;
-                    if (info == null)
-                        DisconnectAsync(Texts.Of("No Backend Server Found!")); //TODO: Translation
-                    else
-                        player.ConnectAsync(info)
-                            .ContinueWith(e =>
-                                {
-                                    player.DisconnectAsync(Texts.Of("Error connecting to Server"));
-                                    //TODO: Translation
-                                    Logger.Warn(e.Exception.InnerException.InnerException,
-                                        "'{0}' couldn't connect to Server '{1}'",
-                                        _name, info.Name);
-                                },
-                                TaskContinuationOptions.OnlyOnFaulted);
+                    player.DisconnectAsync(Texts.Of("Error connecting to Server"));
+                    //TODO: Translation
+                    Logger.Warn(t.Exception.InnerException, "'{0}' couldn't connect to Server '{1}'", _name, info.Name);
                 });
         }
 

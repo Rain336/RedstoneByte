@@ -19,5 +19,4 @@ The code style is the default ReSharpener code style.
 - [ ] Plugin Api
 
 ### Bugs
-- [ ] Aes encryption doesn't work
-- [ ] Packets break while passing through
+- [ ] TheProxy stops passing through Packets after a while.

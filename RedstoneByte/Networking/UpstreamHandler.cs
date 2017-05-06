@@ -9,6 +9,9 @@ namespace RedstoneByte.Networking
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public readonly Player Player;
+#if DEBUG
+        private int _lost;
+#endif
 
         public UpstreamHandler(Player player)
         {
@@ -21,13 +24,23 @@ namespace RedstoneByte.Networking
 
         public void OnPacket(IPacket packet)
         {
+#if DEBUG
+            System.Threading.Interlocked.Increment(ref _lost);
+#endif
             if (Player.Server == null) return;
             PatchEntityId(packet as EntityPacket);
-            Player.Server.SendPacketAsync(packet);
+            Player.Server.SendPacketAsync(packet)
+#if DEBUG
+                .ContinueWith(t => System.Threading.Interlocked.Decrement(ref _lost))
+#endif
+                ;
         }
 
         public void OnDisconnect()
         {
+#if DEBUG
+            Logger.Debug("Lost Packets: " + System.Threading.Interlocked.CompareExchange(ref _lost, 0, 0));
+#endif
             Player.Server?.DisconnectAsync();
             PlayerList.RemovePlayer(Player);
         }

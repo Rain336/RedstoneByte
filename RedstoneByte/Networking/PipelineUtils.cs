@@ -8,7 +8,7 @@ namespace RedstoneByte.Networking
     public static class PipelineUtils
     {
         public const string LagacyId = "lagacy";
-        public static readonly LagacyDecoder Lagacy = new LagacyDecoder();
+        public static readonly LagacyPingHandler Lagacy = new LagacyPingHandler();
 
         public const string PrependerId = "prepender";
         public static readonly Varint21FrameEncoder Prepender = new Varint21FrameEncoder();
@@ -35,6 +35,7 @@ namespace RedstoneByte.Networking
                 catch (ChannelException)
                 {
                 }
+                channel.Configuration.SetOption(ChannelOption.TcpNodelay, true);
                 channel.Configuration.Allocator = PooledByteBufferAllocator.Default;
 
                 var handler = new PacketHandler(false);
