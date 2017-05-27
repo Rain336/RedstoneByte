@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Net;
+using System.Reflection;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using DotNetty.Common.Concurrency;
 using DotNetty.Transport.Channels;
@@ -10,6 +12,7 @@ namespace RedstoneByte.Networking
 {
     public sealed class PacketHandler : SimpleChannelInboundHandler<IPacket>
     {
+        private static readonly FieldInfo ModeValue = typeof(SymmetricAlgorithm).GetField("ModeValue");
         public ConnectionState State = ConnectionState.Handshaking;
         public ProtocolVersion Version = RedstoneByte.ProtocolVersion;
         public IPEndPoint Address => (IPEndPoint) _channel.RemoteAddress;
@@ -74,13 +77,14 @@ namespace RedstoneByte.Networking
 #endif
                 return _channel.WriteAsync(packet)
 #if DEBUG
-                    .ContinueWith(t =>
-                    {
-                        watch.Stop();
-                        RedstoneByte.Logger.Debug(Handler.GetType().Name + " =OUT=> " +
-                                                  packet.GetType().Name + '(' + watch.ElapsedMilliseconds + "ms)");
-                    });
+                        .ContinueWith(t =>
+                        {
+                            watch.Stop();
+                            RedstoneByte.Logger.Debug(Handler.GetType().Name + " =OUT=> " +
+                                                      packet.GetType().Name + '(' + watch.ElapsedMilliseconds + "ms)");
+                        })
 #endif
+                    ;
             }
             var buffer = new BufferedPacket(packet);
             _buffer.Enqueue(buffer);
@@ -94,20 +98,6 @@ namespace RedstoneByte.Networking
 
         public void SetupEncryption(byte[] secret)
         {
-            //TODO: When .NET Core 2.0 comes out
-            //TODO: replace BouncyCastle with System.Security.Cryptography
-            //var aes = Aes.Create();
-            //aes.Mode = CipherMode.CFB;
-            //aes.Padding = PaddingMode.None;
-            //aes.KeySize = 128;
-            //aes.Key = secret;
-            //aes.IV = secret;
-
-            //_channel.Pipeline.AddBefore(PipelineUtils.SplitterId, PipelineUtils.DecryptorId,
-            //    new PacketDecryptor(aes.CreateDecryptor()));
-            //_channel.Pipeline.AddBefore(PipelineUtils.PrependerId, PipelineUtils.EncryptorId,
-            //    new PacketEncryptor(aes.CreateEncryptor()));
-
             _channel.Pipeline.AddBefore(PipelineUtils.SplitterId, PipelineUtils.DecryptorId,
                 new PacketDecryptor(secret));
             _channel.Pipeline.AddBefore(PipelineUtils.PrependerId, PipelineUtils.EncryptorId,

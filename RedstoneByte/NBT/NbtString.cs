@@ -17,6 +17,11 @@ namespace RedstoneByte.NBT
         {
             return base.Equals(other) && Value == other.Value;
         }
+        
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as NbtString);
+        }
 
         public override void WriteToBuffer(IByteBuffer buffer)
         {
@@ -34,7 +39,7 @@ namespace RedstoneByte.NBT
 
         public override string ToString()
         {
-            return Value.ToString();
+            return Value;
         }
 
         public static implicit operator string(NbtString value)

@@ -19,6 +19,11 @@ namespace RedstoneByte.NBT
         {
             return base.Equals(other) && _value.SequenceEqual(other._value);
         }
+        
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as NbtList);
+        }
 
         public void ReadFromBuffer(IByteBuffer buffer)
         {

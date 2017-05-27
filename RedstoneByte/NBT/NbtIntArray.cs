@@ -20,6 +20,11 @@ namespace RedstoneByte.NBT
         {
             return base.Equals(other) && Value == other.Value;
         }
+        
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as NbtIntArray);
+        }
 
         public override void WriteToBuffer(IByteBuffer buffer)
         {

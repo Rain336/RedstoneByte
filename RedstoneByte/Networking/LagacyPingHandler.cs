@@ -7,6 +7,10 @@ namespace RedstoneByte.Networking
     {
         public override bool IsSharable => true;
 
+        public LagacyPingHandler() : base(false)
+        {
+        }
+
         protected override void ChannelRead0(IChannelHandlerContext ctx, IByteBuffer msg)
         {
             if (!msg.IsReadable()) return;

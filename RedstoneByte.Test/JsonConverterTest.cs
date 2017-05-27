@@ -4,12 +4,10 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RedstoneByte.Text;
 using RedstoneByte.Utils;
-using Xunit;
 
 namespace RedstoneByte.Test
 {
-    [Collection("TestFile")]
-    public class JsonConverterTest
+    public static class JsonConverterTest
     {
         public static readonly StatusResponse ResponseDummy = new StatusResponse
         {
@@ -28,13 +26,6 @@ namespace RedstoneByte.Test
                 "{\"translate\":\"chat.type.text\",\"with\":[{\"text\":\"Herobrine\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/msg Herobrine \"},\"hoverEvent\":{\"action\":\"show_entity\",\"value\":\"{id:f84c6a79-0a4e-45e0-879b-cd49ebd4c4e2,name:Herobrine}\"},\"insertion\":\"Herobrine\"},{\"text\":\"I don\'t exist\"}]}"
             ;
 
-        private readonly TestFileFixture _file;
-
-        public JsonConverterTest(TestFileFixture file)
-        {
-            _file = file;
-        }
-
         public static readonly TextBase TextDummy = new TranslationText("chat.type.text")
         {
             With =
@@ -50,8 +41,8 @@ namespace RedstoneByte.Test
             }
         };
 
-        [Fact]
-        public void StatusResponse_JsonWrite()
+        [Test]
+        public static void StatusResponse_JsonWrite()
         {
             var json = JObject.Parse(JsonConvert.SerializeObject(ResponseDummy));
 
@@ -71,8 +62,8 @@ namespace RedstoneByte.Test
             Assert.Null(json["favicon"]);
         }
 
-        [Fact]
-        public void TextBase_JsonRead()
+        [Test]
+        public static void TextBase_JsonRead()
         {
             var text = JsonConvert.DeserializeObject<TextBase>(TextJsonDummy);
             var translation = text as TranslationText;
@@ -100,11 +91,10 @@ namespace RedstoneByte.Test
             Assert.Equal(message.ToPlain(), "I don't exist");
         }
 
-        [Fact]
-        public void TextBase_JsonWrite()
+        [Test]
+        public static void TextBase_JsonWrite()
         {
             var json = JsonConvert.SerializeObject(TextDummy);
-            _file.WriteLine(json, this);
         }
     }
 }

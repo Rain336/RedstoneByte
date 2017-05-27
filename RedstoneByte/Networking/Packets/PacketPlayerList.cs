@@ -10,23 +10,22 @@ namespace RedstoneByte.Networking.Packets
     public sealed class PacketPlayerList : IPacket
     {
         public Action TheAction { get; set; }
-        public Item[] Items;
+        public readonly List<Item> Items = new List<Item>();
 
         public void ReadFromBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
             TheAction = (Action) buffer.ReadVarInt();
             var count = buffer.ReadVarInt();
-            var list = new List<Item>();
             for (var i = 0; i < count; i++)
             {
-                list.Add(Item.FromBuffer(buffer, TheAction));
+                Items.Add(Item.FromBuffer(buffer, TheAction));
             }
         }
 
         public void WriteToBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
             buffer.WriteVarInt((int) TheAction);
-            buffer.WriteVarInt(Items.Length);
+            buffer.WriteVarInt(Items.Count);
             foreach (var item in Items)
             {
                 item.ToBuffer(buffer, TheAction);
@@ -38,16 +37,15 @@ namespace RedstoneByte.Networking.Packets
             if(guids.Length == 0)
                 throw new ArgumentException("cannot be null!", nameof(guids));
 
-            var items = new Item[guids.Length];
-            for (var i = 0; i < items.Length; i++)
-            {
-                items[i] = Item.RemovePlayer(guids[i]);
-            }
-            return new PacketPlayerList
+            var result = new PacketPlayerList
             {
                 TheAction = Action.RemovePlayer,
-                Items = items
             };
+            foreach (var guid in guids)
+            {
+                result.Items.Add(Item.RemovePlayer(guid));
+            }
+            return result;
         }
 
         public static PacketPlayerList UpdateDisplayName(params (Guid, TextBase)[] args)
@@ -55,16 +53,15 @@ namespace RedstoneByte.Networking.Packets
             if(args.Length == 0)
                 throw new ArgumentException("cannot be null!", nameof(args));
 
-            var items = new Item[args.Length];
-            for (var i = 0; i < items.Length; i++)
-            {
-                items[i] = Item.UpdateDisplayName(args[i].Item1, args[i].Item2);
-            }
-            return new PacketPlayerList
+            var result = new PacketPlayerList
             {
                 TheAction = Action.UpdateDisplayName,
-                Items = items
             };
+            foreach (var item in args)
+            {
+                result.Items.Add(Item.UpdateDisplayName(item.Item1, item.Item2));
+            }
+            return result;
         }
 
         public static PacketPlayerList UpdateLatency(params (Guid, int)[] args)
@@ -72,16 +69,15 @@ namespace RedstoneByte.Networking.Packets
             if(args.Length == 0)
                 throw new ArgumentException("cannot be null!", nameof(args));
 
-            var items = new Item[args.Length];
-            for (var i = 0; i < items.Length; i++)
-            {
-                items[i] = Item.UpdateLatency(args[i].Item1, args[i].Item2);
-            }
-            return new PacketPlayerList
+            var result = new PacketPlayerList
             {
                 TheAction = Action.UpdateLatency,
-                Items = items
             };
+            foreach (var item in args)
+            {
+                result.Items.Add(Item.UpdateLatency(item.Item1, item.Item2));
+            }
+            return result;
         }
 
         public static PacketPlayerList UpdateGamemode(params (Guid, Gamemode)[] args)
@@ -89,16 +85,15 @@ namespace RedstoneByte.Networking.Packets
             if(args.Length == 0)
                 throw new ArgumentException("cannot be null!", nameof(args));
 
-            var items = new Item[args.Length];
-            for (var i = 0; i < items.Length; i++)
-            {
-                items[i] = Item.UpdateGamemode(args[i].Item1, args[i].Item2);
-            }
-            return new PacketPlayerList
+            var result = new PacketPlayerList
             {
                 TheAction = Action.UpdateGamemode,
-                Items = items
             };
+            foreach (var item in args)
+            {
+                result.Items.Add(Item.UpdateGamemode(item.Item1, item.Item2));
+            }
+            return result;
         }
 
         public static PacketPlayerList AddPlayer(params (GameProfile, Gamemode, int, TextBase)[] args)
@@ -106,16 +101,15 @@ namespace RedstoneByte.Networking.Packets
             if(args.Length == 0)
                 throw new ArgumentException("cannot be null!", nameof(args));
 
-            var items = new Item[args.Length];
-            for (var i = 0; i < items.Length; i++)
-            {
-                items[i] = Item.AddPlayer(args[i].Item1, args[i].Item2, args[i].Item3, args[i].Item4);
-            }
-            return new PacketPlayerList
+            var result = new PacketPlayerList
             {
                 TheAction = Action.AddPlayer,
-                Items = items
             };
+            foreach (var item in args)
+            {
+                result.Items.Add(Item.AddPlayer(item.Item1, item.Item2, item.Item3, item.Item4));
+            }
+            return result;
         }
 
         public sealed class Item

@@ -233,7 +233,7 @@ namespace RedstoneByte.Networking
                     player.DisconnectAsync(Texts.Of("Error connecting to Server"));
                     //TODO: Translation
                     Logger.Warn(t.Exception.InnerException, "'{0}' couldn't connect to Server '{1}'", _name, info.Name);
-                });
+                }, TaskContinuationOptions.OnlyOnFaulted);
         }
 
         private void CheckState(StartupState state)
