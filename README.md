@@ -13,10 +13,11 @@ The code style is the default ReSharpener code style.
 - [X] Text Api
 - [X] NBT Api
 - [X] Entity Id Patching
+- [X] Custom Native Cipher based on OPenSSL
 
 ### Planed
-- [ ] Replace BouncyCastle AES with .NET Core 2.0 AES
 - [ ] Plugin Api
 
 ### Bugs
 - [ ] TheProxy stops passing through Packets after a while.
+- [ ] Memoryleak in some ByteBuffer. Maybe fixed?

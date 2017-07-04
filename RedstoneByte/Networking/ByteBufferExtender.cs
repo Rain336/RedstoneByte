@@ -8,19 +8,34 @@ namespace RedstoneByte.Networking
 {
     public static class ByteBufferExtender
     {
+//        public static int ReadVarInt(this IByteBuffer buffer)
+//        {
+//            var value = 0;
+//            var size = 0;
+//            while (true)
+//            {
+//                var b = buffer.ReadByte();
+//                value |= (b & 0x7F) << size++ * 7;
+//                if (size > 5)
+//                    throw new FormatException("VarInt may not be longer than 5 bytes.");
+//                if ((b & 0x80) != 128)
+//                    break;
+//            }
+//            return value;
+//        }
+
         public static int ReadVarInt(this IByteBuffer buffer)
         {
-            var value = 0;
-            var size = 0;
-            while (true)
+            int value;
+            do
             {
-                var b = buffer.ReadByte();
-                value |= (b & 0x7F) << size++ * 7;
-                if (size > 5)
-                    throw new FormatException("VarInt may not be longer than 28 bits.");
-                if ((b & 0x80) != 128)
-                    break;
-            }
+                var b = buffer.ReadByte(); value  = (b & 0x7F)      ; if ((b & 0x80) == 0) break;
+                    b = buffer.ReadByte(); value |= (b & 0x7F) <<  7; if ((b & 0x80) == 0) break;
+                    b = buffer.ReadByte(); value |= (b & 0x7F) << 14; if ((b & 0x80) == 0) break;
+                    b = buffer.ReadByte(); value |= (b & 0x7F) << 21; if ((b & 0x80) == 0) break;
+                    b = buffer.ReadByte(); value |= (b & 0x7F) << 28; if ((b & 0x80) == 0) break;
+                throw new FormatException("VarInt may not be longer than 5 bytes.");
+            } while (false);
             return value;
         }
 
