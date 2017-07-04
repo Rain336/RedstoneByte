@@ -22,13 +22,14 @@ namespace RedstoneByte.Networking
             else
             {
                 var result = context.Allocator.Buffer(size);
+                int length;
                 using (var stream = new DeflateStream(
                     new MemoryStream(message.Array, message.ArrayOffset + message.ReaderIndex, message.ReadableBytes),
                     CompressionMode.Decompress))
                 {
-                    stream.Read(result.Array, result.ArrayOffset + result.WriterIndex, message.ReadableBytes);
+                    length = stream.Read(result.Array, result.ArrayOffset + result.WriterIndex, message.ReadableBytes);
                 }
-                result.SetWriterIndex(result.WriterIndex + message.ReadableBytes);
+                result.SetWriterIndex(result.WriterIndex + length);
                 message.SkipBytes(message.ReadableBytes);
             }
         }

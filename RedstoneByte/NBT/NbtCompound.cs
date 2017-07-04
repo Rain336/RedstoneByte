@@ -21,6 +21,11 @@ namespace RedstoneByte.NBT
             return base.Equals(other) && Value == other.Value;
         }
 
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as NbtCompound);
+        }
+
         public void ReadFromBuffer(IByteBuffer buffer)
         {
             var type = (NbtType) buffer.ReadByte();

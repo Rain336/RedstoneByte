@@ -47,14 +47,16 @@ namespace RedstoneByte
             };
             StatusUpdater.Start();
 
-            IPAddress address;
-            if (!IPAddress.TryParse(ProxyConfig.Instance.IpAddress, out address))
+            if (!IPAddress.TryParse(ProxyConfig.Instance.IpAddress, out var address))
             {
                 address = IPAddress.Any;
             }
 
             EndPoint = new IPEndPoint(address, ProxyConfig.Instance.Port);
             Logger.Info("Running on '{0}'", EndPoint);
+
+            ServerQueue.LoadFromFile();
+            Logger.Info("ServerQueue loaded.");
         }
 
         public static StatusResponse CopyStatusResponse()
@@ -67,7 +69,6 @@ namespace RedstoneByte
 
         public static Task Start()
         {
-            ServerQueue.LoadFromFile();
             return NetworkManager.Run(EndPoint);
         }
 

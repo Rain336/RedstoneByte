@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using DotNetty.Buffers;
 using Newtonsoft.Json;
@@ -26,7 +25,7 @@ namespace RedstoneByte.Utils
         {
             for (byte i = 0; i < Entries.Count; i++)
             {
-                if (Entries[i] == null) continue;
+                if (!Entries.ContainsKey(i)) continue;
                 buffer.WriteByte(i);
                 buffer.WriteByte((byte) Entries[i].Type);
                 Entries[i].WriteToBuffer(buffer);

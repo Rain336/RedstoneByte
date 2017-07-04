@@ -27,6 +27,8 @@ namespace RedstoneByte
                 .Group(NetworkManager.WorkerGroup)
                 .Channel<TcpSocketChannel>()
                 .Option(ChannelOption.ConnectTimeout, TimeSpan.FromMilliseconds(300))
+                .Option(ChannelOption.WriteBufferHighWaterMark, 10485760)
+                .Option(ChannelOption.WriteBufferLowWaterMark, 1048576)
                 .Handler(new ActionChannelInitializer<IChannel>(channel =>
                 {
                     try
@@ -36,6 +38,7 @@ namespace RedstoneByte
                     catch (ChannelException)
                     {
                     }
+                    channel.Configuration.SetOption(ChannelOption.TcpNodelay, true);
                     channel.Configuration.Allocator = PooledByteBufferAllocator.Default;
 
                     var handler = new PacketHandler(true);

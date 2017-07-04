@@ -36,7 +36,7 @@ namespace RedstoneByte
                         }
                         break;
 
-                    case string str when str.Equals("stop", StringComparison.OrdinalIgnoreCase):
+                    case string str when str.Equals("exit", StringComparison.OrdinalIgnoreCase):
                         flag = false;
                         break;
                 }

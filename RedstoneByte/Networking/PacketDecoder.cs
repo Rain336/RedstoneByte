@@ -6,7 +6,7 @@ using RedstoneByte.Networking.Packets;
 
 namespace RedstoneByte.Networking
 {
-    public sealed class PacketDecoder : ByteToMessageDecoder
+    public sealed class PacketDecoder : MessageToMessageDecoder<IByteBuffer>
     {
         public PacketHandler Handler { get; set; }
 
