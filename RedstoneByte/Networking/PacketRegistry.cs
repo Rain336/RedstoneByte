@@ -81,16 +81,12 @@ namespace RedstoneByte.Networking
                 play.RegisterPacket(0x43, typeof(PacketCamera), ProtocolVersion.V189);
                 play.RegisterPacket(0x48, typeof(PacketCollectItem), ProtocolVersion.Range(ProtocolVersion.V194));
                 play.RegisterPacket(0x49, typeof(PacketEntityTeleport), ProtocolVersion.Range(ProtocolVersion.V194));
-                play.RegisterPacket(0x49, typeof(PacketCollectItem),
-                    ProtocolVersion.V19, ProtocolVersion.V191, ProtocolVersion.V192);
+                play.RegisterPacket(0x49, typeof(PacketCollectItem), ProtocolVersion.V19, ProtocolVersion.V191, ProtocolVersion.V192);
                 play.RegisterPacket(0x4A, typeof(PacketEntityProperties), ProtocolVersion.Range(ProtocolVersion.V194));
-                play.RegisterPacket(0x4A, typeof(PacketEntityProperties),
-                    ProtocolVersion.V19, ProtocolVersion.V191, ProtocolVersion.V192);
-                play.RegisterPacket(0x4B, typeof(PacketEntityTeleport),
-                    ProtocolVersion.V19, ProtocolVersion.V191, ProtocolVersion.V192);
+                play.RegisterPacket(0x4A, typeof(PacketEntityProperties), ProtocolVersion.V19, ProtocolVersion.V191, ProtocolVersion.V192);
+                play.RegisterPacket(0x4B, typeof(PacketEntityTeleport), ProtocolVersion.V19, ProtocolVersion.V191, ProtocolVersion.V192);
                 play.RegisterPacket(0x4B, typeof(PacketEntityEffect), ProtocolVersion.Range(ProtocolVersion.V194));
-                play.RegisterPacket(0x4C, typeof(PacketEntityEffect),
-                    ProtocolVersion.V19, ProtocolVersion.V191, ProtocolVersion.V192);
+                play.RegisterPacket(0x4C, typeof(PacketEntityEffect), ProtocolVersion.V19, ProtocolVersion.V191, ProtocolVersion.V192);
             });
         });
 
@@ -213,7 +209,7 @@ namespace RedstoneByte.Networking
 
             public IPacket CreatePacket(ProtocolVersion version, int id)
             {
-                return (IPacket) Activator.CreateInstance(Type);
+                return (IPacket)Activator.CreateInstance(Type);
             }
         }
 
@@ -239,7 +235,7 @@ namespace RedstoneByte.Networking
             {
                 if (_packets.TryGetValue(id, out var type))
                 {
-                    return (IPacket) Activator.CreateInstance(type);
+                    return (IPacket)Activator.CreateInstance(type);
                 }
                 return null;
             }
@@ -290,7 +286,7 @@ namespace RedstoneByte.Networking
                 if (!_packets.TryGetValue(version, out var dict)) return null;
                 if (dict.TryGetValue(id, out var type))
                 {
-                    return (IPacket) Activator.CreateInstance(type);
+                    return (IPacket)Activator.CreateInstance(type);
                 }
                 return null;
             }

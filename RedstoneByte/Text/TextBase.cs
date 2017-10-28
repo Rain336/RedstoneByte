@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -197,7 +196,7 @@ namespace RedstoneByte.Text
             public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
             {
                 writer.WriteStartObject();
-                var text = (TextBase) value;
+                var text = (TextBase)value;
                 WriteProperty(writer, "bold", text.Bold);
                 WriteProperty(writer, "italic", text.Italic);
                 WriteProperty(writer, "underlined", text.Underlined);
@@ -299,14 +298,14 @@ namespace RedstoneByte.Text
                         {
                             result = new TranslationText(json["translate"].Value<string>());
                             if (json["with"] != null)
-                                ((TranslationText) result).With.AddRange(json["with"].ToObject<List<TextBase>>());
+                                ((TranslationText)result).With.AddRange(json["with"].ToObject<List<TextBase>>());
                         }
                         else if (json["score"] != null)
                         {
                             result = new ScoreText(json["score"]["name"].Value<string>(),
                                 json["score"]["objective"].Value<string>());
                             if (json["score"]["value"] != null)
-                                ((ScoreText) result).Value = json["score"]["value"].Value<string>();
+                                ((ScoreText)result).Value = json["score"]["value"].Value<string>();
                         }
                         else if (json["selector"] != null)
                         {

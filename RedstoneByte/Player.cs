@@ -40,13 +40,14 @@ namespace RedstoneByte
                 {
                     Reason = reason
                 }))
-                .ContinueWith(t => Handler.CloseConnectionAsync());
+                .ContinueWith(t => Handler.Channel.CloseAsync());
         }
 
         public async Task ConnectAsync(ServerInfo info)
         {
             if (Server != null && Server.Info == info)
                 throw new InvalidOperationException("The Player is already connected to this Server.");
+
             lock (_lock)
             {
                 if (_pending.Contains(info))
@@ -54,11 +55,12 @@ namespace RedstoneByte
 
                 _pending.Add(info);
             }
+
             try
             {
                 var channel = await info.CreateConnectionAsync(this);
             }
-            catch (AggregateException e)
+            catch (AggregateException)
             {
                 ClosePendingConnection(info);
                 throw;

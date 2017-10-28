@@ -2,61 +2,25 @@
 using System.Text;
 using DotNetty.Buffers;
 using RedstoneByte.Networking.Packets;
-using RedstoneByte.Utils;
 
 namespace RedstoneByte.Networking
 {
     public static class ByteBufferExtender
     {
-//        public static int ReadVarInt(this IByteBuffer buffer)
-//        {
-//            var value = 0;
-//            var size = 0;
-//            while (true)
-//            {
-//                var b = buffer.ReadByte();
-//                value |= (b & 0x7F) << size++ * 7;
-//                if (size > 5)
-//                    throw new FormatException("VarInt may not be longer than 5 bytes.");
-//                if ((b & 0x80) != 128)
-//                    break;
-//            }
-//            return value;
-//        }
-
         public static int ReadVarInt(this IByteBuffer buffer)
         {
-            int value;
-            do
+            var value = 0;
+            var size = 0;
+            while (true)
             {
-                var b = buffer.ReadByte(); value  = (b & 0x7F)      ; if ((b & 0x80) == 0) break;
-                    b = buffer.ReadByte(); value |= (b & 0x7F) <<  7; if ((b & 0x80) == 0) break;
-                    b = buffer.ReadByte(); value |= (b & 0x7F) << 14; if ((b & 0x80) == 0) break;
-                    b = buffer.ReadByte(); value |= (b & 0x7F) << 21; if ((b & 0x80) == 0) break;
-                    b = buffer.ReadByte(); value |= (b & 0x7F) << 28; if ((b & 0x80) == 0) break;
-                throw new FormatException("VarInt may not be longer than 5 bytes.");
-            } while (false);
+                var b = buffer.ReadByte();
+                value |= (b & 0x7F) << size++ * 7;
+                if (size > 5)
+                    throw new FormatException("VarInt may not be longer than 5 bytes.");
+                if ((b & 0x80) != 128)
+                    break;
+            }
             return value;
-        }
-
-        public static float ReadFloat(this IByteBuffer buffer)
-        {
-            return BitConverter.ToSingle(buffer.ReadBytes(4).ToArray(), 0);
-        }
-
-        public static Position ReadPosition(this IByteBuffer buffer)
-        {
-            return new Position(buffer.ReadLong());
-        }
-
-        public static Slot ReadSlot(this IByteBuffer buffer)
-        {
-            var result = new Slot(buffer.ReadShort());
-            if (result.Id == -1) return result;
-            result.Count = buffer.ReadByte();
-            result.Metadata = buffer.ReadShort();
-            result.NbtCompound.ReadFromBuffer(buffer);
-            return result;
         }
 
         public static Guid ReadGuid(this IByteBuffer buffer)
@@ -88,24 +52,6 @@ namespace RedstoneByte.Networking
                 value >>= 7;
             }
             buffer.WriteByte(value);
-        }
-
-        public static void WriteFloat(this IByteBuffer buffer, float value)
-        {
-            buffer.WriteBytes(BitConverter.GetBytes(value));
-        }
-
-        public static void WritePosition(this IByteBuffer buffer, Position value)
-        {
-            buffer.WriteLong(value.ToLong());
-        }
-
-        public static void WriteSlot(this IByteBuffer buffer, Slot value)
-        {
-            buffer.WriteShort(value.Id);
-            if(value.Id == -1) return;
-            buffer.WriteByte(value.Count);
-            buffer.WriteShort(value.Metadata);
         }
 
         public static void WriteString(this IByteBuffer buffer, string value)

@@ -25,10 +25,10 @@ namespace RedstoneByte.Networking
         public void OnConnect()
         {
             var builder = new StringBuilder(Info.EndPoint.Address.ToString());
-            if (ProxyConfig.Instance.IpForward && ProxyConfig.Instance.OnlineMode)
+            if (RedstoneByte.Config.IpForward && RedstoneByte.Config.OnlineMode)
             {
                 builder.Append('\0')
-                    .Append(Player.Handler.Address.Address)
+                    .Append(Player.Handler.EndPoint.Address)
                     .Append('\0')
                     .Append(Player.Guid.ToString("N"));
             }
@@ -38,7 +38,7 @@ namespace RedstoneByte.Networking
             {
                 Version = RedstoneByte.ProtocolVersion.Id,
                 Address = builder.ToString(),
-                Port = (ushort) Info.EndPoint.Port,
+                Port = (ushort)Info.EndPoint.Port,
                 Next = 2
             });
 
@@ -48,7 +48,7 @@ namespace RedstoneByte.Networking
                 Name = Player.Name
             });
 
-            Handler.Flush();
+            Handler.Channel.Flush();
         }
 
         public void OnPacket(IPacket packet)

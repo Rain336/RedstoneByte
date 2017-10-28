@@ -8,7 +8,7 @@ namespace RedstoneByte.Networking
 {
     public static class NetworkManager
     {
-        public static readonly MultithreadEventLoopGroup BossGroup = new MultithreadEventLoopGroup();
+        public static readonly MultithreadEventLoopGroup BossGroup = new MultithreadEventLoopGroup(1);
         public static readonly MultithreadEventLoopGroup WorkerGroup = new MultithreadEventLoopGroup();
 
         public static IChannel Channel { get; private set; }

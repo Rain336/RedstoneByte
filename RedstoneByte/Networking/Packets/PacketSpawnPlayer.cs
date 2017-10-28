@@ -14,7 +14,7 @@ namespace RedstoneByte.Networking.Packets
         public byte Yaw { get; set; }
         public byte Pitch { get; set; }
         public short CurrentItem { get; set; }
-        public readonly EntityMetadata Metadata = new EntityMetadata();
+        public byte[] Metadata { get; set; }
 
         public override void ReadFromBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
@@ -27,7 +27,8 @@ namespace RedstoneByte.Networking.Packets
             Pitch = buffer.ReadByte();
             if (version == ProtocolVersion.V189)
                 CurrentItem = buffer.ReadShort();
-            Metadata.ReadFromBuffer(buffer);
+            Metadata = buffer.ToArray();
+            buffer.SkipBytes(buffer.ReadableBytes);
         }
 
         public override void WriteToBuffer(IByteBuffer buffer, ProtocolVersion version)
@@ -35,16 +36,16 @@ namespace RedstoneByte.Networking.Packets
             buffer.WriteVarInt(EntityId);
             buffer.WriteGuid(PlayerGuid);
             if (version >= ProtocolVersion.V19) buffer.WriteDouble(X);
-            else buffer.WriteInt((int) Math.Floor(X));
+            else buffer.WriteInt((int)Math.Floor(X));
             if (version >= ProtocolVersion.V19) buffer.WriteDouble(Y);
-            else buffer.WriteInt((int) Math.Floor(Y));
+            else buffer.WriteInt((int)Math.Floor(Y));
             if (version >= ProtocolVersion.V19) buffer.WriteDouble(Z);
-            else buffer.WriteInt((int) Math.Floor(Z));
+            else buffer.WriteInt((int)Math.Floor(Z));
             buffer.WriteByte(Yaw);
             buffer.WriteByte(Pitch);
             if (version == ProtocolVersion.V189)
                 buffer.WriteShort(CurrentItem);
-            Metadata.WriteToBuffer(buffer);
+            buffer.WriteBytes(Metadata);
         }
     }
 }

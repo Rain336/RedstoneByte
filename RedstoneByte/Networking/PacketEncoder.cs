@@ -14,18 +14,15 @@ namespace RedstoneByte.Networking
             var unknowen = message as PacketUnknowen;
 #if DEBUG
             var id = unknowen?.PacketId ??
-                     PacketRegistry.GetId(!Handler.Client, Handler.State, Handler.Version,
-                         message.GetType());
+                     PacketRegistry.GetId(!Handler.Client, Handler.State, Handler.Version, message.GetType());
             output.WriteVarInt(id);
 #else
             output.WriteVarInt(unknowen?.PacketId ??
-                               PacketRegistry.GetId(!Handler.Client, Handler.State, Handler.Version,
-                                   message.GetType()));
+                               PacketRegistry.GetId(!Handler.Client, Handler.State, Handler.Version, message.GetType()));
 #endif
             message.WriteToBuffer(output, Handler.Version);
 #if DEBUG
-            RedstoneByte.Logger.Debug(Handler.Handler.GetType().Name + " =OUT=> " +
-                                      message.GetType().Name + '(' + id + ')');
+            RedstoneByte.Logger.Debug(Handler.Handler.GetType().Name + " =OUT=> " + message.GetType().Name + '(' + id + ')');
             //RedstoneByte.Logger.Debug(
             //    System.BitConverter.ToString(output.Array, output.ReaderIndex, output.ReadableBytes));
 #endif

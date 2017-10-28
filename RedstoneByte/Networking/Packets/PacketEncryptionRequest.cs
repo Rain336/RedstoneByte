@@ -10,14 +10,14 @@ namespace RedstoneByte.Networking.Packets
 
         public void ReadFromBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
-            buffer.ReadString();
+            buffer.ReadByte();
             PublicKey = buffer.ReadBytes(buffer.ReadVarInt()).ToArray();
             VerifyToken = buffer.ReadBytes(buffer.ReadVarInt()).ToArray();
         }
 
         public void WriteToBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
-            buffer.WriteString("");
+            buffer.WriteByte(0);
             buffer.WriteVarInt(PublicKey.Length);
             buffer.WriteBytes(PublicKey);
             buffer.WriteVarInt(VerifyToken.Length);

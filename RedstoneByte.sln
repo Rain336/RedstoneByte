@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.0.0
-MinimumVisualStudioVersion = 10.0.0.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedstoneByte", "RedstoneByte\RedstoneByte.csproj", "{DF1841FB-47EE-4C3A-AB34-F408C2BA8925}"
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.15
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedstoneByte", "RedstoneByte\RedstoneByte.csproj", "{DF1841FB-47EE-4C3A-AB34-F408C2BA8925}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett", "Nett\Source\Nett\Nett.csproj", "{842D43B8-EBB7-48D7-9EE7-931EA113820E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nett", "Nett\Source\Nett\Nett.csproj", "{842D43B8-EBB7-48D7-9EE7-931EA113820E}"
 EndProject
-Project("{758DF6EC-A76E-4C2E-BBAE-A3C58B2D4AB5}") = "RedstoneByte.Test", "RedstoneByte.Test\RedstoneByte.Test.csproj", "{FD125423-C1BA-47A2-8965-14B45798AF25}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedstoneByte.Test", "RedstoneByte.Test\RedstoneByte.Test.csproj", "{A352322E-21C0-4B3D-BDDA-8A679855CDB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,12 +23,15 @@ Global
 		{842D43B8-EBB7-48D7-9EE7-931EA113820E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{842D43B8-EBB7-48D7-9EE7-931EA113820E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{842D43B8-EBB7-48D7-9EE7-931EA113820E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FD125423-C1BA-47A2-8965-14B45798AF25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FD125423-C1BA-47A2-8965-14B45798AF25}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FD125423-C1BA-47A2-8965-14B45798AF25}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FD125423-C1BA-47A2-8965-14B45798AF25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A352322E-21C0-4B3D-BDDA-8A679855CDB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A352322E-21C0-4B3D-BDDA-8A679855CDB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A352322E-21C0-4B3D-BDDA-8A679855CDB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A352322E-21C0-4B3D-BDDA-8A679855CDB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E093A0F1-E8F3-40D5-A126-C9BE1E5C541F}
 	EndGlobalSection
 EndGlobal

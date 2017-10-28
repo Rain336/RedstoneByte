@@ -21,7 +21,7 @@ namespace RedstoneByte
 
         public Task DisconnectAsync()
         {
-            return Task.Delay(250).ContinueWith(t => Handler.CloseConnectionAsync());
+            return Task.Delay(250).ContinueWith(t => Handler.Channel.CloseAsync());
         }
     }
 }

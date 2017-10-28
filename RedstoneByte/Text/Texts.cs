@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RedstoneByte.Text
+﻿namespace RedstoneByte.Text
 {
     /// <summary>
     /// The <see cref="TextBase"/> Factory class.
@@ -58,15 +56,15 @@ namespace RedstoneByte.Text
                 var arg = args[0];
                 if (arg is TextBase)
                 {
-                    return (TextBase) args[0];
+                    return (TextBase)args[0];
                 }
                 if (arg is Selector)
                 {
-                    return new SelectorText((Selector) arg);
+                    return new SelectorText((Selector)arg);
                 }
                 if (arg is string)
                 {
-                    return Of((string) arg);
+                    return Of((string)arg);
                 }
                 return null;
             }
@@ -83,27 +81,27 @@ namespace RedstoneByte.Text
                 if (obj is TextStyle)
                 {
                     formated = true;
-                    style = (TextStyle) obj;
+                    style = (TextStyle)obj;
                 }
                 else if (obj is TextColor)
                 {
                     formated = true;
-                    color = (TextColor) obj;
+                    color = (TextColor)obj;
                 }
                 else if (obj is ClickEvent)
                 {
                     formated = true;
-                    click = (ClickEvent) obj;
+                    click = (ClickEvent)obj;
                 }
                 else if (obj is HoverEvent)
                 {
                     formated = true;
-                    hover = (HoverEvent) obj;
+                    hover = (HoverEvent)obj;
                 }
                 else if (obj is TextBase)
                 {
                     formated = false;
-                    var text = (TextBase) obj;
+                    var text = (TextBase)obj;
 
                     text.Style |= style;
                     if (color != TextColor.Reset)
@@ -122,9 +120,9 @@ namespace RedstoneByte.Text
                     TextBase text;
 
                     if (obj is string)
-                        text = new StringText((string) obj);
+                        text = new StringText((string)obj);
                     else if (obj is Selector)
-                        text = new SelectorText((Selector) obj);
+                        text = new SelectorText((Selector)obj);
                     else
                         text = new StringText(obj.ToString());
 

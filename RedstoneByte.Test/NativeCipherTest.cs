@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RedstoneByte.Native;
 
 namespace RedstoneByte.Test
 {
+    [TestClass]
     public static class NativeCipherTest
     {
-        [Test]
+        [TestMethod]
         public static void HelloWorld()
         {
             var result = Encoding.UTF8.GetBytes("Hello World!");
@@ -34,7 +36,7 @@ namespace RedstoneByte.Test
             }
             HexDump(decrypted);
 
-            Assert.Equal(result, decrypted);
+            Assert.AreEqual(result, decrypted);
         }
 
         private static void HexDump(IEnumerable<byte> encrypted)

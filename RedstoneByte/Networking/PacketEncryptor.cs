@@ -19,8 +19,7 @@ namespace RedstoneByte.Networking
         protected override void Encode(IChannelHandlerContext context, IByteBuffer message, IByteBuffer output)
         {
             output.EnsureWritable(message.ReadableBytes);
-            Cipher.Process(message.Array, message.ArrayOffset + message.ReaderIndex, message.ReadableBytes,
-                output.Array, output.ArrayOffset + output.WriterIndex);
+            Cipher.Process(message.Array, message.ArrayOffset + message.ReaderIndex, message.ReadableBytes, output.Array, output.ArrayOffset + output.WriterIndex);
             output.SetWriterIndex(output.WriterIndex + message.ReadableBytes);
             message.SkipBytes(message.ReadableBytes);
         }

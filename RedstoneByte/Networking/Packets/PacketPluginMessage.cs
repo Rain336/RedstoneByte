@@ -11,8 +11,7 @@ namespace RedstoneByte.Networking.Packets
         public void ReadFromBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
             Tag = buffer.ReadString();
-            Buffer = buffer.Slice();
-            Buffer.Retain();
+            Buffer = buffer.Copy();
             buffer.SkipBytes(buffer.ReadableBytes);
         }
 

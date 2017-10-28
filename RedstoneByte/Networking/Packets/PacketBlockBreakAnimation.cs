@@ -6,21 +6,19 @@ namespace RedstoneByte.Networking.Packets
     public sealed class PacketBlockBreakAnimation : EntityPacket
     {
         public override int EntityId { get; set; }
-        public Position Position { get; set; }
-        public byte State { get; set; }
+        public byte[] Data { get; set; }
 
         public override void ReadFromBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
             EntityId = buffer.ReadVarInt();
-            Position = buffer.ReadPosition();
-            State = buffer.ReadByte();
+            Data = buffer.ToArray();
+            buffer.SkipBytes(buffer.ReadableBytes);
         }
 
         public override void WriteToBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
             buffer.WriteVarInt(EntityId);
-            buffer.WritePosition(Position);
-            buffer.WriteByte(State);
+            buffer.WriteBytes(Data);
         }
     }
 }

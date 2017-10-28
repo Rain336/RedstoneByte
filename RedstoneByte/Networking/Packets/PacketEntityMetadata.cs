@@ -6,18 +6,19 @@ namespace RedstoneByte.Networking.Packets
     public sealed class PacketEntityMetadata : EntityPacket
     {
         public override int EntityId { get; set; }
-        public readonly EntityMetadata Metadata = new EntityMetadata();
+        public byte[] Metadata { get; set; }
 
         public override void ReadFromBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
             EntityId = buffer.ReadVarInt();
-            Metadata.ReadFromBuffer(buffer);
+            Metadata = buffer.ToArray();
+            buffer.SkipBytes(buffer.ReadableBytes);
         }
 
         public override void WriteToBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
             buffer.WriteVarInt(EntityId);
-            Metadata.WriteToBuffer(buffer);
+            buffer.WriteBytes(Metadata);
         }
     }
 }

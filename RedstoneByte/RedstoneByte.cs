@@ -17,19 +17,19 @@ namespace RedstoneByte
         public static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public static readonly ProtocolVersion MinVersion = ProtocolVersion.V189;
         public static readonly ProtocolVersion MaxVersion = ProtocolVersion.V1112;
-        public static readonly object StatusLock = new object();
-        private static readonly StatusResponse Response;
         public static readonly ProtocolVersion ProtocolVersion;
-        public static readonly IPEndPoint EndPoint;
         public static readonly Thread StatusUpdater;
+        public static readonly ProxyConfig Config;
+        private static readonly object _lock = new object();
+        private static readonly StatusResponse Response;
 
         static RedstoneByte()
         {
             Thread.CurrentThread.Name = "RedstoneByte Thread";
-            ProxyConfig.Load();
+            Config = ProxyConfig.Load();
             Logger.Info("Proxy confing Loaded!");
 
-            ProtocolVersion = ProtocolVersion.Get(ProxyConfig.Instance.Networking.ProtocolVersion);
+            ProtocolVersion = ProtocolVersion.Get(Config.Networking.ProtocolVersion);
             if (ProtocolVersion == null)
                 throw new InvalidOperationException("Invalid Protocol Version in Config.");
             Logger.Info("Target Protocol Version is '{0}'", ProtocolVersion.Name);
@@ -37,8 +37,8 @@ namespace RedstoneByte
             Response = new StatusResponse
             {
                 Version = ProtocolVersion,
-                MaxPlayers = ProxyConfig.Instance.MaxPlayers,
-                Motd = Texts.Of(ProxyConfig.Instance.Motd),
+                MaxPlayers = Config.MaxPlayers,
+                Motd = Texts.Of(Config.Motd),
                 Favicon = LoadFavicon()
             };
             StatusUpdater = new Thread(StatusUpdate)
@@ -47,21 +47,13 @@ namespace RedstoneByte
             };
             StatusUpdater.Start();
 
-            if (!IPAddress.TryParse(ProxyConfig.Instance.IpAddress, out var address))
-            {
-                address = IPAddress.Any;
-            }
-
-            EndPoint = new IPEndPoint(address, ProxyConfig.Instance.Port);
-            Logger.Info("Running on '{0}'", EndPoint);
-
             ServerQueue.LoadFromFile();
             Logger.Info("ServerQueue loaded.");
         }
 
         public static StatusResponse CopyStatusResponse()
         {
-            lock (StatusLock)
+            lock (_lock)
             {
                 return Response.Copy();
             }
@@ -69,7 +61,15 @@ namespace RedstoneByte
 
         public static Task Start()
         {
-            return NetworkManager.Run(EndPoint);
+            if (!IPAddress.TryParse(Config.IpAddress, out var address))
+            {
+                address = IPAddress.Any;
+            }
+
+            var ep = new IPEndPoint(address, Config.Port);
+            Logger.Info("Running on '{0}'", ep);
+
+            return NetworkManager.Run(ep);
         }
 
         public static Task Stop()
@@ -117,7 +117,7 @@ namespace RedstoneByte
             var token = IsRunning.Token;
             while (!token.IsCancellationRequested)
             {
-                lock (StatusLock)
+                lock (_lock)
                 {
                     Response.OnlinePlayers = PlayerList.Count;
                 }

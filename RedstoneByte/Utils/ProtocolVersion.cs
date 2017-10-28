@@ -11,7 +11,22 @@ namespace RedstoneByte.Utils
     [JsonObject(MemberSerialization.OptIn)]
     public sealed class ProtocolVersion : IEquatable<ProtocolVersion>, IComparable<ProtocolVersion>
     {
-        private static readonly Dictionary<int, ProtocolVersion> Versions = new Dictionary<int, ProtocolVersion>();
+        private static readonly Dictionary<int, ProtocolVersion> _versions = new Dictionary<int, ProtocolVersion>();
+
+        /// <summary>
+        /// Protocol Version for Mincraft 1.12.2.
+        /// </summary>
+        public static readonly ProtocolVersion V1122 = GetOrCreate("1.12.2", 340);
+
+        /// <summary>
+        /// Protocol Version for Mincraft 1.12.1.
+        /// </summary>
+        public static readonly ProtocolVersion V1121 = GetOrCreate("1.12.1", 338);
+
+        /// <summary>
+        /// Protocol Version for Mincraft 1.12.
+        /// </summary>
+        public static readonly ProtocolVersion V112 = GetOrCreate("1.12", 335);
 
         /// <summary>
         /// Protocol Version for Mincraft 1.11.1 to 1.11.2.
@@ -72,7 +87,7 @@ namespace RedstoneByte.Utils
         /// <returns>All versions in an array.</returns>
         public static ProtocolVersion[] Range()
         {
-            return Versions.Values.ToArray();
+            return _versions.Values.ToArray();
         }
 
         /// <summary>
@@ -82,7 +97,7 @@ namespace RedstoneByte.Utils
         /// <returns>All <see cref="ProtocolVersion"/>s from <see cref="start"/> to the newet version.</returns>
         public static ProtocolVersion[] Range(ProtocolVersion start)
         {
-            return Versions.Values.Where(it => it >= start).ToArray();
+            return _versions.Values.Where(it => it >= start).ToArray();
         }
 
         /// <summary>
@@ -93,7 +108,7 @@ namespace RedstoneByte.Utils
         /// <returns>All <see cref="ProtocolVersion"/>s from <see cref="start"/> to <see cref="end"/>.</returns>
         public static ProtocolVersion[] Range(ProtocolVersion start, ProtocolVersion end)
         {
-            return Versions.Values.Where(it => it >= start && it <= end).ToArray();
+            return _versions.Values.Where(it => it >= start && it <= end).ToArray();
         }
 
         /// <summary>
@@ -104,7 +119,7 @@ namespace RedstoneByte.Utils
         /// <returns>The ProtocolVersion or null.</returns>
         public static ProtocolVersion Get(int id)
         {
-            return Versions.TryGetValue(id, out var version) ? version : null;
+            return _versions.TryGetValue(id, out var version) ? version : null;
         }
 
         /// <summary>
@@ -114,10 +129,10 @@ namespace RedstoneByte.Utils
         /// <returns>The nearest Version.</returns>
         public static ProtocolVersion ApproximateVersion(int version)
         {
-            if (Versions.TryGetValue(version, out var ret)) return ret;
+            if (_versions.TryGetValue(version, out var ret)) return ret;
             ProtocolVersion result = null;
             var distance = version;
-            foreach (var value in Versions.Values)
+            foreach (var value in _versions.Values)
             {
                 var current = value.Id - version;
                 if (current < 0) current = -current;
@@ -131,12 +146,14 @@ namespace RedstoneByte.Utils
         /// <summary>
         /// The Human-readable Name of a Protocol Version.
         /// </summary>
-        [JsonProperty("name")] public readonly string Name;
+        [JsonProperty("name")]
+        public readonly string Name;
 
         /// <summary>
         /// The numeric Id of a Protocol Version
         /// </summary>
-        [JsonProperty("protocol")] public readonly int Id;
+        [JsonProperty("protocol")]
+        public readonly int Id;
 
         /// <summary>
         /// Creates a new Protocol Version.
@@ -147,7 +164,7 @@ namespace RedstoneByte.Utils
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Id = id;
-            Versions.Add(id, this);
+            _versions.Add(id, this);
         }
 
         public bool Equals(ProtocolVersion other)

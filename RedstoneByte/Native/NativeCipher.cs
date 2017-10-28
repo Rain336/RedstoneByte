@@ -11,7 +11,7 @@ namespace RedstoneByte.Native
         public NativeCipher(bool encrypting)
         {
             Encrypting = encrypting;
-            Handle = OpenSsl.NewCipher();
+            Handle = OpenSSL.NewCipher();
             if (Handle == IntPtr.Zero)
                 throw new OpenSslException(Handle.ToInt32());
         }
@@ -32,12 +32,12 @@ namespace RedstoneByte.Native
             {
                 if (Encrypting)
                 {
-                    result = OpenSsl.InitEncryptingCipher(Handle, OpenSsl.Aes128Cfb8(),
+                    result = OpenSSL.InitEncryptingCipher(Handle, OpenSSL.Aes128Cfb8(),
                         IntPtr.Zero, (IntPtr) keyPtr, (IntPtr) ivPtr);
                 }
                 else
                 {
-                    result = OpenSsl.InitDecryptingCipher(Handle, OpenSsl.Aes128Cfb8(),
+                    result = OpenSSL.InitDecryptingCipher(Handle, OpenSSL.Aes128Cfb8(),
                         IntPtr.Zero, (IntPtr) keyPtr, (IntPtr) ivPtr);
                 }
             }
@@ -68,8 +68,8 @@ namespace RedstoneByte.Native
             {
                 var i = 0;
                 var result = Encrypting
-                    ? OpenSsl.EncryptUpdate(Handle, (IntPtr) outPtr, (IntPtr) (&i), (IntPtr) inPtr, inLength)
-                    : OpenSsl.DecryptUpdate(Handle, (IntPtr) outPtr, (IntPtr) (&i), (IntPtr) inPtr, inLength);
+                    ? OpenSSL.EncryptUpdate(Handle, (IntPtr) outPtr, (IntPtr) (&i), (IntPtr) inPtr, inLength)
+                    : OpenSSL.DecryptUpdate(Handle, (IntPtr) outPtr, (IntPtr) (&i), (IntPtr) inPtr, inLength);
                 if (result != 1)
                     throw new OpenSslException(result);
                 return i;
@@ -79,7 +79,7 @@ namespace RedstoneByte.Native
         public void Dispose()
         {
             if (_disposed) return;
-            OpenSsl.DeleteCipher(Handle);
+            OpenSSL.DeleteCipher(Handle);
             _disposed = true;
         }
     }

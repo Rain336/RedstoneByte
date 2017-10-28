@@ -6,12 +6,11 @@ namespace RedstoneByte.Networking.Packets
     public class PacketUnknowen : IPacket
     {
         public int PacketId { get; set; }
-        public IByteBuffer Buffer { get; set; }
+        public byte[] Buffer { get; set; }
 
         public void ReadFromBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
-            Buffer = buffer.Slice();
-            Buffer.Retain();
+            Buffer = buffer.ToArray();
             buffer.SkipBytes(buffer.ReadableBytes);
         }
 

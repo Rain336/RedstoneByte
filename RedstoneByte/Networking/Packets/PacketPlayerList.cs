@@ -14,7 +14,7 @@ namespace RedstoneByte.Networking.Packets
 
         public void ReadFromBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
-            TheAction = (Action) buffer.ReadVarInt();
+            TheAction = (Action)buffer.ReadVarInt();
             var count = buffer.ReadVarInt();
             for (var i = 0; i < count; i++)
             {
@@ -24,7 +24,7 @@ namespace RedstoneByte.Networking.Packets
 
         public void WriteToBuffer(IByteBuffer buffer, ProtocolVersion version)
         {
-            buffer.WriteVarInt((int) TheAction);
+            buffer.WriteVarInt((int)TheAction);
             buffer.WriteVarInt(Items.Count);
             foreach (var item in Items)
             {
@@ -34,7 +34,7 @@ namespace RedstoneByte.Networking.Packets
 
         public static PacketPlayerList RemovePlayer(params Guid[] guids)
         {
-            if(guids.Length == 0)
+            if (guids.Length == 0)
                 throw new ArgumentException("cannot be null!", nameof(guids));
 
             var result = new PacketPlayerList
@@ -50,7 +50,7 @@ namespace RedstoneByte.Networking.Packets
 
         public static PacketPlayerList UpdateDisplayName(params (Guid, TextBase)[] args)
         {
-            if(args.Length == 0)
+            if (args.Length == 0)
                 throw new ArgumentException("cannot be null!", nameof(args));
 
             var result = new PacketPlayerList
@@ -66,7 +66,7 @@ namespace RedstoneByte.Networking.Packets
 
         public static PacketPlayerList UpdateLatency(params (Guid, int)[] args)
         {
-            if(args.Length == 0)
+            if (args.Length == 0)
                 throw new ArgumentException("cannot be null!", nameof(args));
 
             var result = new PacketPlayerList
@@ -80,9 +80,9 @@ namespace RedstoneByte.Networking.Packets
             return result;
         }
 
-        public static PacketPlayerList UpdateGamemode(params (Guid, Gamemode)[] args)
+        public static PacketPlayerList UpdateGamemode(params (Guid, GameMode)[] args)
         {
-            if(args.Length == 0)
+            if (args.Length == 0)
                 throw new ArgumentException("cannot be null!", nameof(args));
 
             var result = new PacketPlayerList
@@ -96,9 +96,9 @@ namespace RedstoneByte.Networking.Packets
             return result;
         }
 
-        public static PacketPlayerList AddPlayer(params (GameProfile, Gamemode, int, TextBase)[] args)
+        public static PacketPlayerList AddPlayer(params (GameProfile, GameMode, int, TextBase)[] args)
         {
-            if(args.Length == 0)
+            if (args.Length == 0)
                 throw new ArgumentException("cannot be null!", nameof(args));
 
             var result = new PacketPlayerList
@@ -117,7 +117,7 @@ namespace RedstoneByte.Networking.Packets
             public Guid Guid { get; set; }
             public TextBase DisplayName { get; set; }
             public int Ping { get; set; }
-            public Gamemode GameMode { get; set; }
+            public GameMode GameMode { get; set; }
             public GameProfile Profile { get; set; }
 
             public static Item RemovePlayer(Guid guid)
@@ -146,7 +146,7 @@ namespace RedstoneByte.Networking.Packets
                 };
             }
 
-            public static Item UpdateGamemode(Guid guid, Gamemode mode)
+            public static Item UpdateGamemode(Guid guid, GameMode mode)
             {
                 return new Item
                 {
@@ -155,7 +155,7 @@ namespace RedstoneByte.Networking.Packets
                 };
             }
 
-            public static Item AddPlayer(GameProfile profile, Gamemode mode, int ping, TextBase name)
+            public static Item AddPlayer(GameProfile profile, GameMode mode, int ping, TextBase name)
             {
                 return new Item
                 {
@@ -183,14 +183,14 @@ namespace RedstoneByte.Networking.Packets
                             result.Profile.Properties.Add(new GameProfile.Property(buffer.ReadString(),
                                 buffer.ReadString(), buffer.ReadBoolean() ? buffer.ReadString() : null));
                         }
-                        result.GameMode = (Gamemode) buffer.ReadVarInt();
+                        result.GameMode = (GameMode)buffer.ReadVarInt();
                         result.Ping = buffer.ReadVarInt();
                         if (buffer.ReadBoolean())
                             result.DisplayName = JsonConvert.DeserializeObject<TextBase>(buffer.ReadString());
                         break;
 
                     case Action.UpdateGamemode:
-                        result.GameMode = (Gamemode) buffer.ReadVarInt();
+                        result.GameMode = (GameMode)buffer.ReadVarInt();
                         break;
 
                     case Action.UpdateLatency:
@@ -224,10 +224,10 @@ namespace RedstoneByte.Networking.Packets
                             buffer.WriteString(property.Name);
                             buffer.WriteString(property.Value);
                             buffer.WriteBoolean(property.HasSignature);
-                            if(property.HasSignature)
+                            if (property.HasSignature)
                                 buffer.WriteString(property.Signature);
                         }
-                        buffer.WriteVarInt((int) GameMode);
+                        buffer.WriteVarInt((int)GameMode);
                         buffer.WriteVarInt(Ping);
                         buffer.WriteBoolean(DisplayName != null);
                         if (DisplayName != null)
@@ -235,7 +235,7 @@ namespace RedstoneByte.Networking.Packets
                         break;
 
                     case Action.UpdateGamemode:
-                        buffer.WriteVarInt((int) GameMode);
+                        buffer.WriteVarInt((int)GameMode);
                         break;
 
                     case Action.UpdateLatency:

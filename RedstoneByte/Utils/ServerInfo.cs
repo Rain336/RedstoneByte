@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-using DotNetty.Buffers;
-using DotNetty.Handlers.Timeout;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
@@ -29,30 +27,7 @@ namespace RedstoneByte
                 .Option(ChannelOption.ConnectTimeout, TimeSpan.FromMilliseconds(300))
                 .Option(ChannelOption.WriteBufferHighWaterMark, 10485760)
                 .Option(ChannelOption.WriteBufferLowWaterMark, 1048576)
-                .Handler(new ActionChannelInitializer<IChannel>(channel =>
-                {
-                    try
-                    {
-                        channel.Configuration.SetOption(ChannelOption.IpTos, 0x18);
-                    }
-                    catch (ChannelException)
-                    {
-                    }
-                    channel.Configuration.SetOption(ChannelOption.TcpNodelay, true);
-                    channel.Configuration.Allocator = PooledByteBufferAllocator.Default;
-
-                    var handler = new PacketHandler(true);
-                    handler.Handler = new ServerStartupHandler(handler, this, player);
-
-                    channel.Pipeline
-                        .AddLast(PipelineUtils.TimeoutId,
-                            new ReadTimeoutHandler(ProxyConfig.Instance.Networking.ReadTimeout))
-                        .AddLast(PipelineUtils.SplitterId, new Varint21FrameDecoder())
-                        .AddLast(PipelineUtils.DecoderId, new PacketDecoder())
-                        .AddLast(PipelineUtils.PrependerId, PipelineUtils.Prepender)
-                        .AddLast(PipelineUtils.EncoderId, new PacketEncoder())
-                        .AddLast(PipelineUtils.HandlerId, handler);
-                }));
+                .Handler(new PipelineUtils.ServerChannelInitializer(this, player));
             return bootstrap.ConnectAsync(EndPoint);
         }
 

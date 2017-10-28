@@ -1,5 +1,4 @@
 ﻿using System;
-using Newtonsoft.Json;
 
 namespace RedstoneByte.Text
 {
@@ -44,7 +43,7 @@ namespace RedstoneByte.Text
         {
             unchecked
             {
-                return ((int) Action * 397) ^ Value.GetHashCode();
+                return ((int)Action * 397) ^ Value.GetHashCode();
             }
         }
 

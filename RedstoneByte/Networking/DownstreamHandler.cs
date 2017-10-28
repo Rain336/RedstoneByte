@@ -2,6 +2,7 @@
 using DotNetty.Handlers.Timeout;
 using NLog;
 using RedstoneByte.Text;
+using RedstoneByte.Networking.Packets;
 
 namespace RedstoneByte.Networking
 {
@@ -11,9 +12,6 @@ namespace RedstoneByte.Networking
         public readonly Server Server;
         public readonly Player Player;
         private bool _disconnected;
-#if DEBUG
-        private int _lost;
-#endif
 
         public DownstreamHandler(Server server, Player player)
         {
@@ -27,22 +25,19 @@ namespace RedstoneByte.Networking
 
         public void OnPacket(IPacket packet)
         {
-#if DEBUG
-            System.Threading.Interlocked.Increment(ref _lost);
-#endif
+            switch (packet)
+            {
+                case PacketKeepAlive alive:
+                    Server.SendPacketAsync(alive);
+                    Player.SendPacketAsync(alive);
+                    return;
+            }
             PatchEntityId(packet as EntityPacket);
-            Player.SendPacketAsync(packet)
-#if DEBUG
-                .ContinueWith(t => System.Threading.Interlocked.Decrement(ref _lost))
-#endif
-                ;
+            Player.SendPacketAsync(packet);
         }
 
         public void OnDisconnect()
         {
-#if DEBUG
-            Logger.Debug("Lost Packets: " + System.Threading.Interlocked.CompareExchange(ref _lost, 0, 0));
-#endif
             if (_disconnected) return;
             Logger.Debug("Server '{0}' diconnected without a trace. :(", Server.Info.Name);
             Player.DisconnectAsync(Texts.Of("System.IDontKnowException: The Server doesn't like you!"));

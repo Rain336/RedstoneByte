@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RedstoneByte.Text;
 using RedstoneByte.Utils;
 
 namespace RedstoneByte.Test
 {
+    [TestClass]
     public static class JsonConverterTest
     {
         public static readonly StatusResponse ResponseDummy = new StatusResponse
@@ -23,8 +25,7 @@ namespace RedstoneByte.Test
         };
 
         public const string TextJsonDummy =
-                "{\"translate\":\"chat.type.text\",\"with\":[{\"text\":\"Herobrine\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/msg Herobrine \"},\"hoverEvent\":{\"action\":\"show_entity\",\"value\":\"{id:f84c6a79-0a4e-45e0-879b-cd49ebd4c4e2,name:Herobrine}\"},\"insertion\":\"Herobrine\"},{\"text\":\"I don\'t exist\"}]}"
-            ;
+                "{\"translate\":\"chat.type.text\",\"with\":[{\"text\":\"Herobrine\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/msg Herobrine \"},\"hoverEvent\":{\"action\":\"show_entity\",\"value\":\"{id:f84c6a79-0a4e-45e0-879b-cd49ebd4c4e2,name:Herobrine}\"},\"insertion\":\"Herobrine\"},{\"text\":\"I don\'t exist\"}]}";
 
         public static readonly TextBase TextDummy = new TranslationText("chat.type.text")
         {
@@ -41,57 +42,57 @@ namespace RedstoneByte.Test
             }
         };
 
-        [Test]
+        [TestMethod]
         public static void StatusResponse_JsonWrite()
         {
             var json = JObject.Parse(JsonConvert.SerializeObject(ResponseDummy));
 
-            Assert.Equal(json["version"]["protocol"].Value<int>(), 47);
-            Assert.Equal(json["version"]["name"].Value<string>(), "1.8.9");
+            Assert.AreEqual(json["version"]["protocol"].Value<int>(), 47);
+            Assert.AreEqual(json["version"]["name"].Value<string>(), "1.8.9");
 
-            Assert.Equal(json["players"]["max"].Value<int>(), 500);
-            Assert.Equal(json["players"]["online"].Value<int>(), 560);
+            Assert.AreEqual(json["players"]["max"].Value<int>(), 500);
+            Assert.AreEqual(json["players"]["online"].Value<int>(), 560);
 
             var profiles = json["players"]["sample"].ToObject<List<GameProfile>>();
-            Assert.Equal(profiles.Count, 1);
-            Assert.Equal(profiles[0].Name, "OfflineUser");
-            Assert.Equal(profiles[0].Guid, Guid.Empty);
+            Assert.AreEqual(profiles.Count, 1);
+            Assert.AreEqual(profiles[0].Name, "OfflineUser");
+            Assert.AreEqual(profiles[0].Guid, Guid.Empty);
 
             var text = json["description"].ToObject<TextBase>();
-            Assert.Equal(text.ToPlain(), "Unittest!");
-            Assert.Null(json["favicon"]);
+            Assert.AreEqual(text.ToPlain(), "Unittest!");
+            Assert.IsNull(json["favicon"]);
         }
 
-        [Test]
+        [TestMethod]
         public static void TextBase_JsonRead()
         {
             var text = JsonConvert.DeserializeObject<TextBase>(TextJsonDummy);
             var translation = text as TranslationText;
 
-            Assert.NotNull(translation);
-            Assert.Equal(translation.With.Count, 2);
+            Assert.IsNotNull(translation);
+            Assert.AreEqual(translation.With.Count, 2);
 
             var name = translation.With[0] as StringText;
 
-            Assert.NotNull(name);
-            Assert.Equal(name.Text, "Herobrine");
-            Assert.Equal(name.Insertion, "Herobrine");
+            Assert.IsNotNull(name);
+            Assert.AreEqual(name.Text, "Herobrine");
+            Assert.AreEqual(name.Insertion, "Herobrine");
 
-            Assert.NotNull(name.ClickEvent);
-            Assert.Equal(name.ClickEvent.Action, ClickEvent.ClickAction.SuggestCommand);
-            Assert.Equal(name.ClickEvent.Value, "/msg Herobrine ");
+            Assert.IsNotNull(name.ClickEvent);
+            Assert.AreEqual(name.ClickEvent.Action, ClickEvent.ClickAction.SuggestCommand);
+            Assert.AreEqual(name.ClickEvent.Value, "/msg Herobrine ");
 
-            Assert.NotNull(name.HoverEvent);
-            Assert.Equal(name.HoverEvent.Action, HoverEvent.HoverAction.ShowEntity);
-            Assert.Equal(name.HoverEvent.Value, "{id:f84c6a79-0a4e-45e0-879b-cd49ebd4c4e2,name:Herobrine}");
+            Assert.IsNotNull(name.HoverEvent);
+            Assert.AreEqual(name.HoverEvent.Action, HoverEvent.HoverAction.ShowEntity);
+            Assert.AreEqual(name.HoverEvent.Value, "{id:f84c6a79-0a4e-45e0-879b-cd49ebd4c4e2,name:Herobrine}");
 
             var message = translation.With[1];
 
-            Assert.IsType<StringText>(message);
-            Assert.Equal(message.ToPlain(), "I don't exist");
+            Assert.IsInstanceOfType(message, typeof(StringText));
+            Assert.AreEqual(message.ToPlain(), "I don't exist");
         }
 
-        [Test]
+        [TestMethod]
         public static void TextBase_JsonWrite()
         {
             var json = JsonConvert.SerializeObject(TextDummy);

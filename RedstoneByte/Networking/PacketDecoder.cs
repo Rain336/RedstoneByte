@@ -14,14 +14,13 @@ namespace RedstoneByte.Networking
         {
             if (!input.IsReadable()) return;
             var id = input.ReadVarInt();
-            var packet = PacketRegistry.CreatePacket(Handler.Client, Handler.State, Handler.Version, id)
-                         ?? new PacketUnknowen
-                         {
-                             PacketId = id
-                         };
+            var packet = PacketRegistry.CreatePacket(Handler.Client, Handler.State, Handler.Version, id) ??
+                new PacketUnknowen
+                {
+                    PacketId = id
+                };
 #if DEBUG
-            RedstoneByte.Logger.Debug(Handler.Handler.GetType().Name + " <=IN= " +
-                                      packet.GetType().Name + '(' + id +')');
+            RedstoneByte.Logger.Debug(Handler.Handler.GetType().Name + " <=IN= " + packet.GetType().Name + '(' + id + ')');
             //RedstoneByte.Logger.Debug(
             //    System.BitConverter.ToString(input.Array, input.ReaderIndex, input.ReadableBytes));
 #endif

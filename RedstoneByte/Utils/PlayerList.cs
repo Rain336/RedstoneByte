@@ -6,43 +6,43 @@ namespace RedstoneByte.Utils
 {
     public static class PlayerList
     {
-        private static readonly Dictionary<Guid, Player> Players = new Dictionary<Guid, Player>();
-        private static readonly object Lock = new object();
+        private static readonly Dictionary<Guid, Player> _players = new Dictionary<Guid, Player>();
+        private static readonly object _lock = new object();
 
         public static int Count
         {
             get
             {
-                lock (Lock)
+                lock (_lock)
                 {
-                    return Players.Count;
+                    return _players.Count;
                 }
             }
         }
 
         public static void AddPlayer(Player player)
         {
-            lock (Lock)
+            lock (_lock)
             {
-                Players.Add(player.Guid, player);
+                _players.Add(player.Guid, player);
             }
         }
 
         public static Player GetPlayer(Guid guid)
         {
-            lock (Lock)
+            lock (_lock)
             {
-                return Players.TryGetValue(guid, out var result) ? result : null;
+                return _players.TryGetValue(guid, out var result) ? result : null;
             }
         }
 
         public static Player GetPlayer(string name)
         {
-            if(name == null)
+            if (name == null)
                 throw new ArgumentNullException(nameof(name));
-            lock (Lock)
+            lock (_lock)
             {
-                return Players.Values.FirstOrDefault(player => player.Name == name);
+                return _players.Values.FirstOrDefault(player => player.Name == name);
             }
         }
 
@@ -51,9 +51,9 @@ namespace RedstoneByte.Utils
 
         public static void RemovePlayer(Guid guid)
         {
-            lock (Lock)
+            lock (_lock)
             {
-                Players.Remove(guid);
+                _players.Remove(guid);
             }
         }
     }

@@ -1,64 +1,12 @@
 ﻿using System;
 using System.Text;
 using DotNetty.Buffers;
-using Newtonsoft.Json;
 using RedstoneByte.NBT;
-using RedstoneByte.Networking;
-using RedstoneByte.Text;
 
 namespace RedstoneByte.Utils
 {
     public static class EnumExtender
     {
-        public static object ReadFromBuffer(this EntityMetadata.EntryType type, IByteBuffer buffer)
-        {
-            switch (type)
-            {
-                case EntityMetadata.EntryType.Byte:
-                    return buffer.ReadByte();
-
-                case EntityMetadata.EntryType.VarInt:
-                    return buffer.ReadVarInt();
-
-                case EntityMetadata.EntryType.Float:
-                    return buffer.ReadFloat();
-
-                case EntityMetadata.EntryType.String:
-                    return buffer.ReadString();
-
-                case EntityMetadata.EntryType.Chat:
-                    return JsonConvert.DeserializeObject<TextBase>(buffer.ReadString());
-
-                case EntityMetadata.EntryType.Slot:
-                    return buffer.ReadSlot();
-
-                case EntityMetadata.EntryType.Boolean:
-                    return buffer.ReadBoolean();
-
-                case EntityMetadata.EntryType.Rotation:
-                    return new Rotation(buffer.ReadFloat(), buffer.ReadFloat(), buffer.ReadFloat());
-
-                case EntityMetadata.EntryType.Position:
-                    return buffer.ReadPosition();
-
-                case EntityMetadata.EntryType.OptPosition:
-                    return buffer.ReadBoolean() ? new Position(buffer.ReadLong()) : Position.Zero;
-
-                case EntityMetadata.EntryType.Direction:
-                    return (Direction) buffer.ReadVarInt();
-
-                case EntityMetadata.EntryType.OptGuid:
-                    return buffer.ReadBoolean() ? buffer.ReadGuid() : Guid.Empty;
-
-                case EntityMetadata.EntryType.OptBlockId:
-                    var value = buffer.ReadVarInt();
-                    return value == 0 ? BlockId.Zero : new BlockId(value);
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-            }
-        }
-
         public static NbtTag ReadFromBuffer(this NbtType type, IByteBuffer buffer)
         {
             switch (type)

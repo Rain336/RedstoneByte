@@ -1,11 +1,10 @@
 ﻿using System;
-using Newtonsoft.Json;
 
 namespace RedstoneByte.Text
 {
-    public static class EnumExtender
+    internal static class EnumExtender
     {
-        public static string Serialize(this HoverEvent.HoverAction action)
+        internal static string Serialize(this HoverEvent.HoverAction action)
         {
             switch (action)
             {
@@ -26,7 +25,7 @@ namespace RedstoneByte.Text
             }
         }
 
-        public static string Serialize(this ClickEvent.ClickAction action)
+        internal static string Serialize(this ClickEvent.ClickAction action)
         {
             switch (action)
             {
@@ -47,7 +46,7 @@ namespace RedstoneByte.Text
             }
         }
 
-        public static string Serialize(this Selector selector)
+        internal static string Serialize(this Selector selector)
         {
             switch (selector)
             {
@@ -68,7 +67,7 @@ namespace RedstoneByte.Text
             }
         }
 
-        public static string Serialize(this TextColor color)
+        internal static string Serialize(this TextColor color)
         {
             switch (color)
             {
@@ -143,7 +142,7 @@ namespace RedstoneByte.Text
             }
         }
 
-        public static HoverEvent.HoverAction ParseHover(string value)
+        internal static HoverEvent.HoverAction ParseHover(string value)
         {
             switch (value)
             {
@@ -164,7 +163,7 @@ namespace RedstoneByte.Text
             }
         }
 
-        public static ClickEvent.ClickAction ParseClick(string value)
+        internal static ClickEvent.ClickAction ParseClick(string value)
         {
             switch (value)
             {
@@ -185,7 +184,7 @@ namespace RedstoneByte.Text
             }
         }
 
-        public static Selector ParseSelector(string value)
+        internal static Selector ParseSelector(string value)
         {
             switch (value)
             {
@@ -206,7 +205,7 @@ namespace RedstoneByte.Text
             }
         }
 
-        public static TextColor ParseColor(string value)
+        internal static TextColor ParseColor(string value)
         {
             switch (value)
             {

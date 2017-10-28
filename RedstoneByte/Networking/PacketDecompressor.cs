@@ -23,9 +23,7 @@ namespace RedstoneByte.Networking
             {
                 var result = context.Allocator.Buffer(size);
                 int length;
-                using (var stream = new DeflateStream(
-                    new MemoryStream(message.Array, message.ArrayOffset + message.ReaderIndex, message.ReadableBytes),
-                    CompressionMode.Decompress))
+                using (var stream = new DeflateStream(new MemoryStream(message.Array, message.ArrayOffset + message.ReaderIndex, message.ReadableBytes), CompressionMode.Decompress))
                 {
                     length = stream.Read(result.Array, result.ArrayOffset + result.WriterIndex, message.ReadableBytes);
                 }

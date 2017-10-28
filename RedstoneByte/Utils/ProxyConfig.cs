@@ -5,7 +5,6 @@ namespace RedstoneByte
 {
     public sealed class ProxyConfig
     {
-        public static ProxyConfig Instance { get; private set; }
         public const string Filename = "RedstoneByte.toml";
         [TomlComment(" The Ip Address RedstoneByte listens on.")]
         [TomlComment(" Empty means the Default IpAddress.")]
@@ -27,18 +26,16 @@ namespace RedstoneByte
         [TomlComment(" This Category contins Sttings Specific to Networking.")]
         public NetworkingCategory Networking { get; set; }
 
-        public static void Load()
+        internal static ProxyConfig Load()
         {
-            if (Instance != null) return;
             if (File.Exists(Filename))
             {
-                Instance = Toml.ReadFile<ProxyConfig>(Filename);
+                return Toml.ReadFile<ProxyConfig>(Filename);
             }
-            else
-            {
-                Instance = CreateDefaultConfig();
-                Toml.WriteFile(Instance, Filename);
-            }
+
+            var instance = CreateDefaultConfig();
+            Toml.WriteFile(instance, Filename);
+            return instance;
         }
 
         public static ProxyConfig CreateDefaultConfig() => new ProxyConfig
@@ -62,8 +59,8 @@ namespace RedstoneByte
             [TomlComment(" The minimum size of a Packet to be compressed.")]
             [TomlComment("   - anything less then zero means disabled.")]
             [TomlComment("   - 0 means 'Compress Anything' or any packet.")]
-            [TomlComment(" Note: Packets less than 64 bytes wiil be extended to 64 bytes.")]
-            [TomlComment(" Note: And The Maximum Transmition Unit is 1500 bytes.")]
+            [TomlComment(" Note: Packets less than 64 bytes will be extended to 64 bytes.")]
+            [TomlComment(" Note: The maximum size of a packet is 1500 bytes before is gets split.")]
             public int CompressionThreshold { get; set; }
 
             public static NetworkingCategory CreateDefaultConfig() => new NetworkingCategory

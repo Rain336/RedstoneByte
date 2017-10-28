@@ -13,11 +13,11 @@ The code style is the default ReSharpener code style.
 - [X] Text Api
 - [X] NBT Api
 - [X] Entity Id Patching
-- [X] Custom Native Cipher based on OPenSSL
+- [X] Custom Native Cipher based on OpenSSL
 
 ### Planed
 - [ ] Plugin Api
 
 ### Bugs
-- [ ] TheProxy stops passing through Packets after a while.
+- [ ] The Proxy stops passing through Packets after a while.
 - [ ] Memoryleak in some ByteBuffer. Maybe fixed?

@@ -75,12 +75,7 @@ namespace RedstoneByte.Networking
         private void OnLoginStart(PacketLoginStart start)
         {
             CheckState(StartupState.Login);
-            if (start.Name.Contains("."))
-            {
-                DisconnectAsync(Texts.Of("Invalid Username!")); //TODO: Translation
-                return;
-            }
-            if (start.Name.Length > 16)
+            if (start.Name.Contains(".") || start.Name.Length > 16)
             {
                 DisconnectAsync(Texts.Of("Invalid Username!")); //TODO: Translation
                 return;
@@ -88,13 +83,13 @@ namespace RedstoneByte.Networking
 
             _name = start.Name;
 
-            if (ProxyConfig.Instance.PlayerLimit > 0 && (ProxyConfig.Instance.PlayerLimit - PlayerList.Count) <= 0)
+            if (RedstoneByte.Config.PlayerLimit > 0 && (RedstoneByte.Config.PlayerLimit - PlayerList.Count) <= 0)
             {
                 DisconnectAsync(Texts.Of("The Proxy is full!")); //TODO: Translation
                 return;
             }
 
-            if (ProxyConfig.Instance.OnlineMode)
+            if (RedstoneByte.Config.OnlineMode)
             {
                 _state = StartupState.Encryption;
                 Handler.SendPacketAsync(new PacketEncryptionRequest
@@ -114,10 +109,10 @@ namespace RedstoneByte.Networking
         {
             CheckState(StartupState.Ping);
             Handler.SendPacketAsync(new PacketPing
-                {
-                    Payload = ping.Payload
-                })
-                .ContinueWith(t => Handler.CloseConnectionAsync());
+            {
+                Payload = ping.Payload
+            })
+                .ContinueWith(t => Handler.Channel.CloseAsync());
         }
 
         private void OnRequest(PacketRequest request)
@@ -125,7 +120,7 @@ namespace RedstoneByte.Networking
             switch (_state)
             {
                 case StartupState.Ping:
-                    Handler.CloseConnectionAsync();
+                    Handler.Channel.CloseAsync();
                     break;
 
                 case StartupState.Status:
@@ -178,7 +173,7 @@ namespace RedstoneByte.Networking
 
         private void Next(GameProfile profile)
         {
-            if (ProxyConfig.Instance.OnlineMode)
+            if (RedstoneByte.Config.OnlineMode)
             {
                 var target = PlayerList.GetPlayer(profile.Guid);
                 target?.DisconnectAsync(Texts.Of("You are alredy connecting."));
@@ -199,7 +194,7 @@ namespace RedstoneByte.Networking
                 }
             }
 
-            var threshold = ProxyConfig.Instance.Networking.CompressionThreshold;
+            var threshold = RedstoneByte.Config.Networking.CompressionThreshold;
             if (threshold >= 0)
             {
                 Handler.SendPacketAsync(new PacketSetCompression
@@ -246,10 +241,10 @@ namespace RedstoneByte.Networking
         {
             _disconnected = true;
             return Handler.SendPacketAsync(new PacketDisconnect
-                {
-                    Reason = reason
-                })
-                .ContinueWith(t => Handler.CloseConnectionAsync());
+            {
+                Reason = reason
+            })
+                .ContinueWith(t => Handler.Channel.CloseAsync());
         }
 
         public void OnDisconnect()

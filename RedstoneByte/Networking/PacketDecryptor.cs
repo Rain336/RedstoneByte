@@ -20,8 +20,7 @@ namespace RedstoneByte.Networking
         protected override void Decode(IChannelHandlerContext context, IByteBuffer message, List<object> output)
         {
             var result = context.Allocator.Buffer(message.ReadableBytes);
-            Cipher.Process(message.Array, message.ArrayOffset + message.ReaderIndex, message.ReadableBytes,
-                result.Array, result.ArrayOffset + result.WriterIndex);
+            Cipher.Process(message.Array, message.ArrayOffset + message.ReaderIndex, message.ReadableBytes, result.Array, result.ArrayOffset + result.WriterIndex);
             result.SetWriterIndex(result.WriterIndex + message.ReadableBytes);
             message.SkipBytes(message.ReadableBytes);
             output.Add(result);
