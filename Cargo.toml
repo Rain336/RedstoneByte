@@ -1,0 +1,13 @@
+[package]
+name = "redstone-byte"
+version = "0.1.0"
+authors = ["Rain336 <rain336@live.de>"]
+edition = "2018"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+tokio = { version = "0.2", features = ["full"] }
+toml = "0.5.6"
+lazy_static = "1.4.0"
+bytes = "0.5.4"
+libdeflater = "0.2.0"
