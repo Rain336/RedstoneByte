@@ -24,7 +24,7 @@ pub async fn frame_decoder(read: &mut (impl AsyncRead + Unpin)) -> Result<Bytes,
 
 pub async fn frame_encoder(buffer: BytesMut) -> impl Buf {
     let length = buffer.len() as u32;
-    let mut prefix = BytesMut::with_capacity(3);
+    let mut prefix = BytesMut::with_capacity(super::var_int_size(length));
     super::write_var_int(&mut prefix, length);
     prefix.freeze().chain(buffer.freeze())
 }

@@ -1,29 +1,37 @@
-mod var_int;
-mod frame;
 mod compression;
+mod encryption;
+mod frame;
+mod var_int;
 
-pub use var_int::*;
 use std::net::SocketAddr;
 use tokio::prelude::*;
+pub use var_int::*;
 
 pub struct Connection {
     address: SocketAddr,
-    compression: Option<compression::CompressionInfo>
+    encryption: Option<encryption::EncryptionInfo>,
+    compression: Option<compression::CompressionInfo>,
 }
 
 impl Connection {
     pub fn new(address: SocketAddr) -> Self {
         Connection {
             address: address,
-            compression: None
+            encryption: None,
+            compression: None,
         }
     }
 
     pub async fn run(mut self, mut read: impl AsyncRead + Unpin) -> Result<(), std::io::Error> {
         loop {
             let mut packet = frame::frame_decoder(&mut read).await?;
+
+            if let Some(e) = self.encryption.as_mut() {
+                packet = e.decrypt_packet(packet);
+            }
+
             if let Some(c) = self.compression.as_mut() {
-                packet = c.decompress_packet(packet).await?;
+                packet = c.decompress_packet(packet)?;
             }
         }
     }
@@ -31,7 +39,12 @@ impl Connection {
     fn set_compression_threshold(&mut self, value: u32) {
         match self.compression.as_mut() {
             Some(c) => c.set_threshold(value),
-            None => self.compression = Some(compression::CompressionInfo::new(value))
+            None => self.compression = Some(compression::CompressionInfo::new(value)),
         }
+    }
+
+    fn set_encrpytion_key(&mut self, key: &[u8]) -> Result<(), cfb8::stream_cipher::InvalidKeyNonceLength> {
+        self.encryption = Some(encryption::EncryptionInfo::new(key)?);
+        Ok(())
     }
 }
