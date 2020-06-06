@@ -16,7 +16,7 @@ pub struct Connection {
 impl Connection {
     pub fn new(address: SocketAddr) -> Self {
         Connection {
-            address: address,
+            address,
             encryption: None,
             compression: None,
         }
@@ -26,19 +26,19 @@ impl Connection {
         loop {
             let mut packet = frame::frame_decoder(&mut read).await?;
 
-            if let Some(e) = self.encryption.as_mut() {
+            if let Some(ref mut e) = self.encryption {
                 packet = e.decrypt_packet(packet);
             }
 
-            if let Some(c) = self.compression.as_mut() {
+            if let Some(ref mut c) = self.compression {
                 packet = c.decompress_packet(packet)?;
             }
         }
     }
 
     fn set_compression_threshold(&mut self, value: u32) {
-        match self.compression.as_mut() {
-            Some(c) => c.set_threshold(value),
+        match self.compression {
+            Some(ref mut c) => c.set_threshold(value),
             None => self.compression = Some(compression::CompressionInfo::new(value)),
         }
     }
