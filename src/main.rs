@@ -3,6 +3,7 @@ extern crate lazy_static;
 
 mod config;
 mod networking;
+mod types;
 
 use tokio::net::TcpListener;
 use tokio::io::{self, BufStream};
